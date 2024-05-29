@@ -4,4 +4,7 @@ class InvoiceItem < ApplicationRecord
     packaged: 1,
     shipped: 2
   }
+
+  belongs_to :invoice
+  belongs_to :item
 end
