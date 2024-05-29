@@ -4,4 +4,10 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "articles#index"
   root 'welcome#index'
+
+  # resources :merchants, only: :dashboard do
+  #   get 'dashboard', on: :member
+  # end
+
+  get "/merchants/:merchant_id/dashboard", to: "merchants/dashboard#show"
 end
