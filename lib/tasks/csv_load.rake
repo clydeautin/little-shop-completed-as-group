@@ -17,5 +17,7 @@ namespace :csv do
     end
     ActiveRecord::Base.connection.reset_pk_sequence!(t)
     puts "Customer data loaded successfully!"
+
+    
   end
 end
