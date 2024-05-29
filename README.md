@@ -1,5 +1,12 @@
 # Little Esty Shop
 
+## Group Member
+Chee Lee
+Clyde Autin
+James Mchugh
+
+- (DTR)[https://docs.google.com/document/d/1OiePLXWPt8AbB-YStQTsF1T4BcGlzboKxp_3Gjk7iHg/edit?usp=sharing]
+
 ## Background and Description
 
 "Little Esty Shop" is a group project that requires students to build a fictitious e-commerce platform where merchants and admins can manage inventory and fulfill customer invoices.
