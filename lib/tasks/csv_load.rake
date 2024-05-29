@@ -1,3 +1,4 @@
+
 require 'csv'
 
 namespace :csv_load do
