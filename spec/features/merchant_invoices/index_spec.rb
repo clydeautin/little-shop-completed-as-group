@@ -194,31 +194,22 @@ RSpec.describe "the merchant dashboard page" do
     @invoice_item23 = FactoryBot.create(:invoice_item, invoice: @invoice17, item: @item23, quantity: 1, unit_price: @item23.unit_price)
     @invoice_item24 = FactoryBot.create(:invoice_item, invoice: @invoice18, item: @item24, quantity: 1, unit_price: @item24.unit_price)
     @invoice_item25 = FactoryBot.create(:invoice_item, invoice: @invoice19, item: @item25, quantity: 1, unit_price: @item25.unit_price)
+  
   end
   describe "As a merchant" do
     describe "when I visit merchant invoices index" do
       it "shows all the invoices that include at least one of my items" do
         visit "/merchants/#{@merchant1.id}/invoices"
 
-        expect(page).to have_content("Invoice ID: #{@invoice1.id}")
-        expect(page).to have_content("Customer ID: #{@invoice1.customer_id}")
-        expect(page).to have_content("Invoice status: #{@invoice1.status}")
-
-        expect(page).to have_content("Invoice ID: #{@invoice2.id}")
-        expect(page).to have_content("Customer ID: #{@invoice2.customer_id}")
-        expect(page).to have_content("Invoice status: #{@invoice2.status}")
-
-        expect(page).to have_content("Invoice ID: #{@invoice3.id}")
-        expect(page).to have_content("Customer ID: #{@invoice3.customer_id}")
-        expect(page).to have_content("Invoice status: #{@invoice3.status}")
-
-        expect(page).to have_content("Invoice ID: #{@invoice4.id}")
-        expect(page).to have_content("Customer ID: #{@invoice4.customer_id}")
-        expect(page).to have_content("Invoice status: #{@invoice4.status}")
-
-        expect(page).to have_link("#{@invoice1.id}", 
-                                  href: "/merchants/#{@merchant1.id}/invoices/#{@invoice1.id}")
-
+        @merchant1.invoices.each do |invoice|
+          within "#invoice-#{invoice.id}" do
+          expect(page).to have_content("Invoice ID: #{invoice.id}")
+          expect(page).to have_content("Customer ID: #{invoice.customer_id}")
+          expect(page).to have_content("Invoice status: #{invoice.status}")
+          expect(page).to have_link("#{invoice.id}", 
+                                    href: "/merchants/#{@merchant1.id}/invoices/#{invoice.id}")
+          end
+        end
       end
     end
   end
