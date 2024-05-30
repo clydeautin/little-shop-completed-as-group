@@ -203,10 +203,13 @@ RSpec.describe "the merchant dashboard page" do
         visit "/merchants/#{@merchant1.id}/invoices/#{@invoice1.id}"
 
         formatted_date = @invoice1.created_at.strftime("%A, %B %d, %Y")
-
+        # save_and_open_page
+        # require 'pry'; binding.pry
         expect(page).to have_content("Invoice id: #{@invoice1.id}")
-        expect(page).to have_content("Invoice status: #{@invoice1.status}")
-        expect(page).to have_content("Invoice created_at: #{formatted_date}")
+        expect(page).to have_content("Status: #{@invoice1.status}")
+        expect(page).to have_content("Created_at: #{formatted_date}")
+        expect(page).to have_content("Customer first name: #{@invoice1.customer.first_name}")
+        expect(page).to have_content("Customer last name: #{@invoice1.customer.last_name}")
       end
     end
   end
