@@ -1,0 +1,7 @@
+<h1>Invoices Index for this Merchant</h1>
+
+<% @invoices.each do |invoice| %>
+  <p>Invoice ID:<%= invoice.id %>
+  <p>Customer ID:<%= invoice.customer_id %>
+  <p>Invoice status:<%= invoice.status %>
+<% end %>
