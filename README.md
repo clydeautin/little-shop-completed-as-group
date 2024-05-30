@@ -5,7 +5,8 @@ Chee Lee
 Clyde Autin
 James Mchugh
 
-- (DTR)[https://docs.google.com/document/d/1OiePLXWPt8AbB-YStQTsF1T4BcGlzboKxp_3Gjk7iHg/edit?usp=sharing]
+- [DTR](https://docs.google.com/document/d/1OiePLXWPt8AbB-YStQTsF1T4BcGlzboKxp_3Gjk7iHg/edit?usp=sharing)
+- [ER Diagram](https://dbdiagram.io/d/66493e60f84ecd1d228ada49)
 
 ## Background and Description
 
