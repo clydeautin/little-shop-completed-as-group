@@ -199,7 +199,7 @@ RSpec.describe "the merchant dashboard page" do
   describe "As a merchant" do
     describe "when I visit merchant invoices index" do
       it "shows all the invoices that include at least one of my items" do
-        visit "/merchants/#{@merchant1.id}/invoices"
+        visit merchant_invoices_path(@merchant1)
 
         @merchant1.invoices.each do |invoice|
           within "#invoice-#{invoice.id}" do

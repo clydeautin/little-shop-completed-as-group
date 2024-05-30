@@ -200,7 +200,7 @@ RSpec.describe "the merchant dashboard page" do
   describe "as a merchant" do
     describe "when I visit my merchant's invoice show page" do
       it "has invoice id, invoice status, invoice created date and customer first and last name" do
-        visit "/merchants/#{@merchant1.id}/invoices/#{@invoice1.id}"
+        visit merchant_invoice_path(@merchant1, @invoice1)
 
         formatted_date = @invoice1.created_at.strftime("%A, %B %d, %Y")
         # save_and_open_page
