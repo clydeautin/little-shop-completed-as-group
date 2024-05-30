@@ -5,3 +5,54 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
+require 'factory_bot_rails'
+require 'faker'
+
+# Clear existing data
+InvoiceItem.destroy_all
+Transaction.destroy_all
+Invoice.destroy_all
+Customer.destroy_all
+Item.destroy_all
+Merchant.destroy_all
+
+# Creates 10 merchants
+10.times do
+  FactoryBot.create(:merchant)
+end
+
+# Create 20 customers
+20.times do
+  FactoryBot.create(:customer)
+end
+
+# Create 5 items and associate with merchants
+Merchant.all.each do |merchant|
+  5.times do
+    FactoryBot.create(:item, merchant: merchant)
+  end
+end
+
+# Create 3 invoices and associate with customers
+Customer.all.each do |customer|
+  3.times do
+    FactoryBot.create(:invoice, customer: customer)
+  end
+end
+
+# Create 2 transactions and associate with invoices
+Invoice.all.each do |invoice|
+  2.times do
+    FactoryBot.create(:transaction, invoice: invoice)
+  end
+end
+
+# Create invoice items and associate with invoices and items with random quantity between 1 and 10
+Invoice.all.each do |invoice|
+  items = Item.all.sample(3) #samples 3 items from invoice
+  items.each do |item|
+    FactoryBot.create(:invoice_item, invoice: invoice, item: item, quantity: rand(1..10), unit_price: item.unit_price)
+  end
+end
+
+puts "Seeding complete!"
