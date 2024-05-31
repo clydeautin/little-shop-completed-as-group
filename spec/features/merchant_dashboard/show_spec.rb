@@ -218,15 +218,12 @@ RSpec.describe "the merchant dashboard page" do
   it "has top 5 customer names each with successful transaction count with merchant" do
     visit "/merchants/#{@merchant1.id}/dashboard"
 
-    def top_5_customers
-
-    end
     within "favorite_customers" do
-      expect(page).to have_content("#{@customer1.first_name} #{@customer1.last_name}: #{customer1.successful_transaction_count(@merchant1.id)} purchases")
-      expect(page).to have_content("#{@customer2.first_name} #{@customer2.last_name}: #{customer2.successful_transaction_count(@merchant1.id)} purchases")
-      expect(page).to have_content("#{@customer3.first_name} #{@customer3.last_name}: #{customer3.successful_transaction_count(@merchant1.id)} purchases")
-      expect(page).to have_content("#{@customer4.first_name} #{@customer4.last_name}: #{customer4.successful_transaction_count(@merchant1.id)} purchases")
-      expect(page).to have_content("#{@customer5.first_name} #{@customer5.last_name}: #{customer5.successful_transaction_count(@merchant1.id)} purchases")
+      expect(page).to have_content("#{@customer1.first_name} #{@customer1.last_name}: #{@customer1.successful_transactions_with_merchant(@merchant1.id)} purchases")
+      expect(page).to have_content("#{@customer2.first_name} #{@customer2.last_name}: #{@customer2.successful_transactions_with_merchant(@merchant1.id)} purchases")
+      expect(page).to have_content("#{@customer3.first_name} #{@customer3.last_name}: #{@customer3.successful_transactions_with_merchant(@merchant1.id)} purchases")
+      expect(page).to have_content("#{@customer4.first_name} #{@customer4.last_name}: #{@customer4.successful_transactions_with_merchant(@merchant1.id)} purchases")
+      expect(page).to have_content("#{@customer5.first_name} #{@customer5.last_name}: #{@customer5.successful_transactions_with_merchant(@merchant1.id)} purchases")
     end
   end
 

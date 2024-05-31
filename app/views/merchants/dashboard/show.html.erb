@@ -1,7 +1,7 @@
 <h1><%= @merchant.name %></h1>
 <div id="favorite_customers">
   <% <@merchant.top_5_customers.each do |customer|> %>
-    <% "#{customer.name} - #{customer.successful_transactions(@merchant.id)} purchases"%>
+    <% "#{customer.name} - #{customer.successful_transactions_with_merchant(@merchant.id)} purchases"%>
 </div>
 <%= link_to "Items Index", "merchants/:merchant_id/items" %>
 <%= link_to "Invoices Index", "merchants/:merchant_id/invoices" %>
