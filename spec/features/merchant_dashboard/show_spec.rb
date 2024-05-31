@@ -25,15 +25,18 @@ RSpec.describe "the merchant dashboard page" do
   # who have conducted the largest number of successful transactions with my merchant
   # And next to each customer name I see the number of successful transactions they have
   # conducted with my merchant
-  it "can see top 5 customer names each with successful transaction count with merchant" do
+  it "has top 5 customer names each with successful transaction count with merchant" do
     visit "/merchants/#{@merchant1.id}/dashboard"
 
+    def top_5_customers
+
+    end
     within "favorite_customers" do
-      expect(page).to have_content("#{@customer1.first_name} #{@customer1.last_name}: #{customer1.largest_successful_transaction(@merchant1.id)} purchases")
-      expect(page).to have_content("#{@customer2.first_name} #{@customer2.last_name}: #{customer2.largest_successful_transaction(@merchant1.id)} purchases")
-      expect(page).to have_content("#{@customer3.first_name} #{@customer3.last_name}: #{customer3.largest_successful_transaction(@merchant1.id)} purchases")
-      expect(page).to have_content("#{@customer4.first_name} #{@customer4.last_name}: #{customer4.largest_successful_transaction(@merchant1.id)} purchases")
-      expect(page).to have_content("#{@customer5.first_name} #{@customer5.last_name}: #{customer5.largest_successful_transaction(@merchant1.id)} purchases")
+      expect(page).to have_content("#{@customer1.first_name} #{@customer1.last_name}: #{customer1.successful_transaction_count(@merchant1.id)} purchases")
+      expect(page).to have_content("#{@customer2.first_name} #{@customer2.last_name}: #{customer2.successful_transaction_count(@merchant1.id)} purchases")
+      expect(page).to have_content("#{@customer3.first_name} #{@customer3.last_name}: #{customer3.successful_transaction_count(@merchant1.id)} purchases")
+      expect(page).to have_content("#{@customer4.first_name} #{@customer4.last_name}: #{customer4.successful_transaction_count(@merchant1.id)} purchases")
+      expect(page).to have_content("#{@customer5.first_name} #{@customer5.last_name}: #{customer5.successful_transaction_count(@merchant1.id)} purchases")
     end
   end
 
@@ -45,7 +48,7 @@ RSpec.describe "the merchant dashboard page" do
   # have been ordered and have not yet been shipped,
   # And next to each Item I see the id of the invoice that ordered my item
   # And each invoice id is a link to my merchant's invoice show page
-  xit "can see list of item names each with its invoice id as a link to merchant invoice show page" do
+  xit "has list of all items name each with its invoice id as a link to merchant invoice show page" do
     visit "/merchants/#{@merchant1.id}/dashboard"
 
     within "items_ready_to_ship" do
