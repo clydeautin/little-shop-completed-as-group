@@ -75,11 +75,11 @@ RSpec.describe "the merchant item index page" do
     within "#update_attr" do
       fill_in "name", with: "I HAVE" 
       fill_in "description", with: "Power level OVER" 
-      fill_in "price", with: 9000
+      fill_in "price", with: "pencil"
     end
 
     click_button "Update"
-
+    save_and_open_page
     expect(page).to have_current_path("/merchants/#{@merchant.id}/items/#{@item1.id}")
     
     within "#items_attr" do

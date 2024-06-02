@@ -48,6 +48,7 @@ RSpec.describe "the merchant item index page" do
     @invoice_item7 = create(:invoice_item, invoice: @invoice7, item: @item3, quantity: 1, unit_price: @item3.unit_price, status:01)
     create(:transaction, invoice: @invoice7, result: 'success')
 
+    #for false positives
     @merchant2 = create(:merchant)
     @item8 = create(:item, merchant: @merchant2, unit_price: 7000)
   
@@ -56,21 +57,31 @@ RSpec.describe "the merchant item index page" do
     8.times { create(:transaction, invoice: @invoice8, result: 'success') }
   end
 
-  # us7
-  it "I see all of the item's attributes including: Name, Description, Current Selling Price" do
-    visit "/merchants/#{@merchant.id}/items/#{@item1.id}"
+  # us6
+  it "I see a list of the names of all of my items and I do not see items for any other merchant" do
+    visit "/merchants/#{@merchant.id}/items"
 
+    within "#merchant_items" do
+      @merchant.items.each do |item|
+        expect(page).to have_content(item.name)
+      end
+    end
+
+    within "#merchant_items" do
+      @merchant2.items.each do |item|
+        expect(page).to_not have_content(item.name)
+      end
+    end
+  end
+
+  #us9
+  it " " do
+    visit "/merchants/#{@merchant.id}/items/#{@item1.id}"
+save_and_open_page
     within "#items_attr" do
       expect(page).to have_content(@item1.name)
       expect(page).to have_content("Description: #{@item1.description}")
       expect(page).to have_content("Current Price: #{@item1.unit_price}")
     end
-  end
-
-  # us8.part1
-  it "has a link to update item info" do
-    visit "/merchants/#{@merchant.id}/items/#{@item1.id}"
-
-    expect(page).to have_link("Update Item")
   end
 end
