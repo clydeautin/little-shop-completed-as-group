@@ -1,0 +1,15 @@
+<h1>Edit item</h1>
+<div id="update_attr">
+  <%= form_with url: "/merchants/#{params[:merchant_id]}/items/#{params[:id]}", method: :patch, local: true do |f| %>
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+
+    <%= f.label :description %>
+    <%= f.text_field :description %>
+
+    <%= f.label :price %>
+    <%= f.number_field :price %>
+
+    <%= f.submit "Update item" %>
+  <% end %>
+</div>

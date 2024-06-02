@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "the merchant item show page" do
+RSpec.describe "the merchant item index page" do
   before(:each) do
     @merchant = create(:merchant)
 
@@ -48,7 +48,6 @@ RSpec.describe "the merchant item show page" do
     @invoice_item7 = create(:invoice_item, invoice: @invoice7, item: @item3, quantity: 1, unit_price: @item3.unit_price, status:01)
     create(:transaction, invoice: @invoice7, result: 'success')
 
-    #for false positives
     @merchant2 = create(:merchant)
     @item8 = create(:item, merchant: @merchant2, unit_price: 7000)
   
@@ -57,20 +56,36 @@ RSpec.describe "the merchant item show page" do
     8.times { create(:transaction, invoice: @invoice8, result: 'success') }
   end
 
-  # us6
-  it "I see a list of the names of all of my items and I do not see items for any other merchant" do
-    visit "/merchants/#{@merchant.id}/items"
-
-    within "#merchant_items" do
-      @merchant.items.each do |item|
-        expect(page).to have_content(item.name)
-      end
+  # us8.part2
+  it "I see a form filled in with the existing item attribute information
+    When I update the information in the form and I click ‘submit’
+    Then I am redirected back to the item show page where I see the updated information
+    And I see a flash message stating that the information has been successfully updated." do
+      
+    visit "/merchants/#{@merchant.id}/items/#{@item1.id}"
+      
+    within "#items_attr" do
+      expect(page).to have_content(@item1.name)
+      expect(page).to have_content("Description: #{@item1.description}")
+      expect(page).to have_content("Current Price: #{@item1.unit_price}")
     end
 
-    within "#merchant_items" do
-      @merchant2.items.each do |item|
-        expect(page).to_not have_content(item.name)
-      end
+    click_on "Update Item"
+    
+    within "#update_attr" do
+      fill_in "name", with: "I HAVE" 
+      fill_in "description", with: "Power level OVER" 
+      fill_in "price", with: 9000
+    end
+
+    click_button "Update"
+
+    expect(page).to have_current_path("/merchants/#{@merchant.id}/items/#{@item1.id}")
+    
+    within "#items_attr" do
+      expect(page).to have_content("I HAVE")
+      expect(page).to have_content("Description: Power level OVER")
+      expect(page).to have_content("Current Price: 9000")
     end
   end
 end

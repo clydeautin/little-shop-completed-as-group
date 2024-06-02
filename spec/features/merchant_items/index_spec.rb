@@ -56,23 +56,21 @@ RSpec.describe "the merchant item index page" do
     8.times { create(:transaction, invoice: @invoice8, result: 'success') }
   end
 
-  # 7. Merchant Items Show Page
-  # As a merchant,
-  # When I click on the name of an item from the merchant items index page, (merchants/:merchant_id/items)
-  # Then I am taken to that merchant's item's show page (/merchants/:merchant_id/items/:item_id)
-  # And I see all of the item's attributes including:
-  # - Name
-  # - Description
-  # - Current Selling Price
-  describe "US 7" do
-    it "I see all of the item's attributes including: Name, Description, Current Selling Price" do
-      visit "/merchants/#{@merchant.id}/items/#{@item1.id}"
-save_and_open_page
-      within "#items_attr" do
-        expect(page).to have_content(@item1.name)
-        expect(page).to have_content("Description: #{@item1.description}")
-        expect(page).to have_content("Current Price: #{@item1.unit_price}")
-      end
+  # us7
+  it "I see all of the item's attributes including: Name, Description, Current Selling Price" do
+    visit "/merchants/#{@merchant.id}/items/#{@item1.id}"
+
+    within "#items_attr" do
+      expect(page).to have_content(@item1.name)
+      expect(page).to have_content("Description: #{@item1.description}")
+      expect(page).to have_content("Current Price: #{@item1.unit_price}")
     end
+  end
+
+  # us8.part1
+  it "has a link to update item info" do
+    visit "/merchants/#{@merchant.id}/items/#{@item1.id}"
+
+    expect(page).to have_link("Update Item")
   end
 end
