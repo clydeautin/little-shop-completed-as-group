@@ -110,8 +110,6 @@ RSpec.describe "the merchant dashboard page" do
       expect(page).to have_link("#{@invoice2.id}", href: "/merchants/#{@merchant.id}/invoices/#{@invoice2.id}")
       expect(page).to have_link("#{@invoice3.id}", href: "/merchants/#{@merchant.id}/invoices/#{@invoice3.id}")
     end
-
-    
   end
 
   # 5. Merchant Dashboard Invoices sorted by least recent

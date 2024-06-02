@@ -12,13 +12,13 @@ RSpec.describe "the merchant item index page" do
     @customer6 = create(:customer)
     @customer7 = create(:customer)
 
-    @item1 = create(:item, merchant: @merchant, unit_price: 1000)
-    @item2 = create(:item, merchant: @merchant, unit_price: 2000)
-    @item3 = create(:item, merchant: @merchant, unit_price: 3000)
-    @item4 = create(:item, merchant: @merchant, unit_price: 4000)
-    @item5 = create(:item, merchant: @merchant, unit_price: 5000)
-    @item6 = create(:item, merchant: @merchant, unit_price: 6000)
-    @item7 = create(:item, merchant: @merchant, unit_price: 7000)
+    @item1 = create(:item, merchant: @merchant, unit_price: 1000, status: 0)
+    @item2 = create(:item, merchant: @merchant, unit_price: 2000, status: 0)
+    @item3 = create(:item, merchant: @merchant, unit_price: 3000, status: 0)
+    @item4 = create(:item, merchant: @merchant, unit_price: 4000, status: 0)
+    @item5 = create(:item, merchant: @merchant, unit_price: 5000, status: 1)
+    @item6 = create(:item, merchant: @merchant, unit_price: 6000, status: 1)
+    @item7 = create(:item, merchant: @merchant, unit_price: 7000, status: 1)
 
     @invoice1 = create(:invoice, customer: @customer1, status: 1)
     @invoice_item1 = create(:invoice_item, invoice: @invoice1, item: @item1, quantity: 1, unit_price: @item1.unit_price, status: 1)
@@ -75,13 +75,29 @@ RSpec.describe "the merchant item index page" do
   end
 
   #us9
-  it " " do
-    visit "/merchants/#{@merchant.id}/items/#{@item1.id}"
-save_and_open_page
-    within "#items_attr" do
-      expect(page).to have_content(@item1.name)
-      expect(page).to have_content("Description: #{@item1.description}")
-      expect(page).to have_content("Current Price: #{@item1.unit_price}")
+  it "I can disable or enable an item with a button next to the item" do
+    visit "/merchants/#{@merchant.id}/items"
+
+    @merchant.items.each do |item|
+      within "#item-#{item.id}" do
+        if item.status == "enabled"
+          expect(page).to have_content(item.name)
+          expect(page).to have_button("Disable")
+        elsif item.status == "disabled"
+          expect(page).to have_content(item.name)
+          expect(page).to have_button("Enable")
+        end
+      end
+    end
+
+    within "#item-#{@item1.id}" do
+      expect(page).to have_button("Disable")
+      expect(page).to_not have_button("Enable")
+
+      click_button "Disable"
+
+      expect(page).to have_button("Enable")
+      expect(page).to_not have_button("Disable")
     end
   end
 end
