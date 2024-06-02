@@ -21,32 +21,39 @@ RSpec.describe "the merchant dashboard page" do
     @item7 = create(:item, merchant: @merchant, unit_price: 7000)
 
     @invoice1 = create(:invoice, customer: @customer1, status: 1)
-    @invoice_item1 = create(:invoice_item, invoice: @invoice1, item: @item1, quantity: 1, unit_price: @item1.unit_price)
+    @invoice_item1 = create(:invoice_item, invoice: @invoice1, item: @item1, quantity: 1, unit_price: @item1.unit_price, status: 1)
     6.times { create(:transaction, invoice: @invoice1, result: 'success') }
 
     @invoice2 = create(:invoice, customer: @customer2, status: 1)
-    @invoice_item2 = create(:invoice_item, invoice: @invoice2, item: @item2, quantity: 1, unit_price: @item2.unit_price)
+    @invoice_item2 = create(:invoice_item, invoice: @invoice2, item: @item2, quantity: 1, unit_price: @item2.unit_price, status: 1)
     2.times { create(:transaction, invoice: @invoice2, result: 'success') }
 
     @invoice3 = create(:invoice, customer: @customer3, status: 1)
-    @invoice_item3 = create(:invoice_item, invoice: @invoice3, item: @item3, quantity: 1, unit_price: @item3.unit_price)
+    @invoice_item3 = create(:invoice_item, invoice: @invoice3, item: @item3, quantity: 1, unit_price: @item3.unit_price, status: 1)
     4.times { create(:transaction, invoice: @invoice3, result: 'success') }
 
     @invoice4 = create(:invoice, customer: @customer4, status: 1)
-    @invoice_item4 = create(:invoice_item, invoice: @invoice4, item: @item4, quantity: 1, unit_price: @item4.unit_price)
+    @invoice_item4 = create(:invoice_item, invoice: @invoice4, item: @item4, quantity: 1, unit_price: @item4.unit_price, status: 1)
     5.times { create(:transaction, invoice: @invoice4, result: 'success') }
 
     @invoice5 = create(:invoice, customer: @customer5, status: 1)
-    @invoice_item5 = create(:invoice_item, invoice: @invoice5, item: @item1, quantity: 1, unit_price: @item1.unit_price)
+    @invoice_item5 = create(:invoice_item, invoice: @invoice5, item: @item1, quantity: 1, unit_price: @item1.unit_price, status: 1)
     3.times { create(:transaction, invoice: @invoice5, result: 'success') }
 
     @invoice6 = create(:invoice, customer: @customer6, status: 0)
-    @invoice_item6 = create(:invoice_item, invoice: @invoice6, item: @item2, quantity: 1, unit_price: @item2.unit_price)
+    @invoice_item6 = create(:invoice_item, invoice: @invoice6, item: @item2, quantity: 1, unit_price: @item2.unit_price, status:01)
     create(:transaction, invoice: @invoice6, result: 'success')
 
     @invoice7 = create(:invoice, customer: @customer7, status: 0)
-    @invoice_item7 = create(:invoice_item, invoice: @invoice7, item: @item3, quantity: 1, unit_price: @item3.unit_price)
+    @invoice_item7 = create(:invoice_item, invoice: @invoice7, item: @item3, quantity: 1, unit_price: @item3.unit_price, status:01)
     create(:transaction, invoice: @invoice7, result: 'success')
+
+    @merchant2 = create(:merchant)
+    @item8 = create(:item, merchant: @merchant2, unit_price: 7000)
+  
+    @invoice8 = create(:invoice, customer: @customer7, status: 1)
+    @invoice_item8 = create(:invoice_item, invoice: @invoice8, item: @item8, quantity: 1, unit_price: @item8.unit_price, status: 1)
+    8.times { create(:transaction, invoice: @invoice8, result: 'success') }
   end
 
   it "displays the name of the merchant" do
@@ -89,18 +96,18 @@ RSpec.describe "the merchant dashboard page" do
   # have been ordered and have not yet been shipped,
   # And next to each Item I see the id of the invoice that ordered my item
   # And each invoice id is a link to my merchant's invoice show page
-  xit "has list of all items name each with its invoice id as a link to merchant invoice show page" do
-    visit "/merchants/#{@merchant1.id}/dashboard"
+  it "has list of all items name each with its invoice id as a link to merchant invoice show page" do
+    visit "/merchants/#{@merchant.id}/dashboard"
 
-    within "items_ready_to_ship" do
-      expect(page).to have_content("#{@item1.name} - Invoice ##{@invoice1.id} - #{@invoice1.create_date}")
-      expect(page).to have_content("#{@item2.name} - Invoice ##{@invoice1.id} - #{@invoice1.create_date}")
-      expect(page).to have_content("#{@item3.name} - Invoice ##{@invoice2.id} - #{@invoice2.create_date}")
-      expect(page).to have_content("#{@item4.name} - Invoice ##{@invoice3.id} - #{@invoice3.create_date}")
+    within "#items_ready_to_ship" do
+      expect(page).to have_content("#{@item1.name} - Invoice ##{@invoice1.id} - #{@invoice1.created_at.strftime("%A, %B %d, %Y")}")
+      expect(page).to have_content("#{@item2.name} - Invoice ##{@invoice2.id} - #{@invoice2.created_at.strftime("%A, %B %d, %Y")}")
+      expect(page).to have_content("#{@item3.name} - Invoice ##{@invoice3.id} - #{@invoice3.created_at.strftime("%A, %B %d, %Y")}")
+      expect(page).to have_content("#{@item4.name} - Invoice ##{@invoice4.id} - #{@invoice4.created_at.strftime("%A, %B %d, %Y")}")
       
-      expect(page).to have_link("##{@invoice1.id}", href: "/merchants/#{@invoice1.id}/invoice")
-      expect(page).to have_link("##{@invoice2.id}", href: "/merchants/#{@invoice2.id}/invoice")
-      expect(page).to have_link("##{@invoice3.id}", href: "/merchants/#{@invoice3.id}/invoice")
+      expect(page).to have_link("#{@invoice1.id}", href: "/merchants/#{@merchant.id}/invoices/#{@invoice1.id}")
+      expect(page).to have_link("#{@invoice2.id}", href: "/merchants/#{@merchant.id}/invoices/#{@invoice2.id}")
+      expect(page).to have_link("#{@invoice3.id}", href: "/merchants/#{@merchant.id}/invoices/#{@invoice3.id}")
     end
 
     
@@ -113,14 +120,28 @@ RSpec.describe "the merchant dashboard page" do
   # Next to each Item name I see the date that the invoice was created
   # And I see the date formatted like "Monday, July 18, 2019"
   # And I see that the list is ordered from oldest to newest
-  xit "can see date on invoice creation next to each item ordered from oldest to newest" do
-    visit "/merchants/#{@merchant1.id}/dashboard"
+  it "can see date on invoice creation next to each item ordered from oldest to newest" do
+    @invoice1.created_at = "2022-01-22 00:00:00"
+    @invoice1.save
+    @invoice2.created_at = "2022-02-22 00:00:00"
+    @invoice2.save
+    @invoice3.created_at = "2022-03-22 00:00:00"
+    @invoice3.save
+    @invoice4.created_at = "2022-04-22 00:00:00"
+    @invoice4.save
+    @invoice5.created_at = "2022-05-22 00:00:00"
+    @invoice5.save
+    @invoice6.created_at = "2022-01-21 00:00:00"
+    @invoice6.save
+    @invoice7.created_at = "2022-01-23 00:00:00"
+    @invoice7.save
+    visit "/merchants/#{@merchant.id}/dashboard"
 
-    within "items_ready_to_ship" do
-      # expect(page).to have_content("- #{@invoice1.create_date}")
-      expect(page).to have_content("- #{@invoice1.create_date}")
-      expect(page).to have_content("- #{@invoice2.create_date}")
-      expect(page).to have_content("- #{@invoice3.create_date}")
+    within "#items_ready_to_ship" do
+      expect("Invoice ##{@invoice6.id}").to appear_before("Invoice ##{@invoice1.id}", only_text: true)
+      expect("Invoice ##{@invoice1.id}").to appear_before("Invoice ##{@invoice7.id}", only_text: true)
+      expect("Invoice ##{@invoice2.id}").to appear_before("Invoice ##{@invoice3.id}", only_text: true)
+      expect("Invoice ##{@invoice4.id}").to appear_before("Invoice ##{@invoice5.id}", only_text: true)
     end
   end
 end

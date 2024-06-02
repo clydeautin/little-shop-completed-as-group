@@ -17,9 +17,17 @@ class Merchant < ApplicationRecord
       .limit(5)
   end
 
-  #   customers.joins(:transactions).where("transactions.result = ? and customers.id = ?", "success", @customer_ids)
-  #   # Customer.joins(invoices: :transactions).where(invoices: {customer_id: @ids}, transactions: {result: 'success'}).select("customers.*, transactions.id, invoices.customer_id")
-  #   Customer.joins(invoices: :transactions).where(invoices: {customer_id: @customer_ids}, transactions: {result: 'success'}).distinct
-  #   Customer.joins(invoices: :transactions).where(invoices: {customer_id: @customer_ids}, transactions: {result: 'success'}).select('customers.*, COUNT(transactions.id) AS transactions_count')
+  def items_ready_to_ship
+    @merchant_invoice_ids = invoice_items.pluck(:id)
 
+    Item.joins(invoices: :invoice_items)
+      .where(invoice_items: {status: 1, id: @merchant_invoice_ids})
+      .select('items.*, invoice_items.invoice_id, invoices.created_at as invoice_date')
+      .order(:invoice_date)
+      .distinct
+  end
 end
+
+
+"Durable Leather Knife - Invoice #6920 - 2024-06-01 22:59:35 UTC"
+"Durable Leather Knife - Invoice # 6920 - 2024-06-01 22:59:35 UTC"
