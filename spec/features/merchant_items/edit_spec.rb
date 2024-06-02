@@ -86,6 +86,7 @@ RSpec.describe "the merchant item index page" do
       expect(page).to have_content("I HAVE")
       expect(page).to have_content("Description: Power level OVER")
       expect(page).to have_content("Current Price: 9000")
+# need to test for sad path/edge cases
     end
   end
 end

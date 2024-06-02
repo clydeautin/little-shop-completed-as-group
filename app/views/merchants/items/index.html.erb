@@ -2,7 +2,14 @@
 <div id="merchant_items">
   <% @items.each do |item| %>
     <div id="item-<%= item.id %>">
-      <p>Item Name: <%= item.name %></p>
+      <div>
+        <%= "Item Name: #{item.name}" %>
+        <% if item.status == "enabled"%>
+          <%= button_to "Disable", "/merchants/#{@merchant.id}/items/#{item.id}?status=disabled", method: :patch, data: { turbo: true }, local: true %>
+        <% elsif item.status == "disabled"%>
+          <%= button_to "Enable", "/merchants/#{@merchant.id}/items/#{item.id}?status=enabled", method: :patch, data: { turbo: true }, local: true %>
+        <% end %><br>
+      </div>
     </div>
   <% end %>
 </div>
