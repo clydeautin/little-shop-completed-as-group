@@ -2,209 +2,147 @@ require "rails_helper"
 
 RSpec.describe "the merchant dashboard page" do
   before(:each) do
-    #budget merchant
-    @merchant1 = FactoryBot.create(:merchant)
-    #mid-tier merchant
-    @merchant2 = FactoryBot.create(:merchant)
-    #high-tier merchant
-    @merchant3 = FactoryBot.create(:merchant)
-    @merchant4 = FactoryBot.create(:merchant)
-    @merchant5 = FactoryBot.create(:merchant)
-    @merchant6 = FactoryBot.create(:merchant)
+    @merchant = create(:merchant)
 
+    @customer1 = create(:customer)
+    @customer2 = create(:customer)
+    @customer3 = create(:customer)
+    @customer4 = create(:customer)
+    @customer5 = create(:customer)
+    @customer6 = create(:customer)
+    @customer7 = create(:customer)
 
-    @customer1 = FactoryBot.create(:customer)
-    @customer2 = FactoryBot.create(:customer)
-    @customer3 = FactoryBot.create(:customer)
-    @customer4 = FactoryBot.create(:customer)
-    @customer5 = FactoryBot.create(:customer)
-    @customer6 = FactoryBot.create(:customer)
-    @customer7 = FactoryBot.create(:customer)
-    # @customer8 = FactoryBot.create(:customer)
-    # @customer9 = FactoryBot.create(:customer)
-    # @customer10 = FactoryBot.create(:customer)
+    @item1 = create(:item, merchant: @merchant, unit_price: 1000)
+    @item2 = create(:item, merchant: @merchant, unit_price: 2000)
+    @item3 = create(:item, merchant: @merchant, unit_price: 3000)
+    @item4 = create(:item, merchant: @merchant, unit_price: 4000)
+    @item5 = create(:item, merchant: @merchant, unit_price: 5000)
+    @item6 = create(:item, merchant: @merchant, unit_price: 6000)
+    @item7 = create(:item, merchant: @merchant, unit_price: 7000)
 
-    #budget merchant
-    @item1 = FactoryBot.create(:item, merchant: @merchant1, unit_price: 110)
-    @item2 = FactoryBot.create(:item, merchant: @merchant1, unit_price: 120)
-    @item3 = FactoryBot.create(:item, merchant: @merchant1, unit_price: 130)
-    @item4 = FactoryBot.create(:item, merchant: @merchant1, unit_price: 210)
-    @item5 = FactoryBot.create(:item, merchant: @merchant1, unit_price: 220)
-    @item6 = FactoryBot.create(:item, merchant: @merchant1, unit_price: 230)
-    @item7 = FactoryBot.create(:item, merchant: @merchant1, unit_price: 310)
-    # @item8 = FactoryBot.create(:item, merchant: @merchant1, unit_price: 320)
-    # @item9 = FactoryBot.create(:item, merchant: @merchant1, unit_price: 330)
-    
-    #mid tier merchant
-    @item8 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 1100)
-    @item9 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 1200)
-    @item10 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 1300)
-    @item11 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 2100)
-    @item12 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 2200)
-    @item13 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 2300)
-    @item14 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 3100)
-    # @item17 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 3200)
-    # @item18 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 3300)
+    @invoice1 = create(:invoice, customer: @customer1, status: 1)
+    @invoice_item1 = create(:invoice_item, invoice: @invoice1, item: @item1, quantity: 1, unit_price: @item1.unit_price, status: 1)
+    6.times { create(:transaction, invoice: @invoice1, result: 'success') }
 
-    @item15 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 1100)
-    @item16 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 1200)
-    @item17 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 1300)
-    @item18 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 2100)
-    @item19 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 2200)
-    @item20 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 2300)
-    @item21 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 3100)
-    # @item26 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 3200)
-    # @item27 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 3300)
+    @invoice2 = create(:invoice, customer: @customer2, status: 1)
+    @invoice_item2 = create(:invoice_item, invoice: @invoice2, item: @item2, quantity: 1, unit_price: @item2.unit_price, status: 1)
+    2.times { create(:transaction, invoice: @invoice2, result: 'success') }
 
-    @item22 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 1100)
-    @item23 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 1200)
-    @item24 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 1300)
-    @item25 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 2100)
-    @item26 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 2200)
-    @item27 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 2300)
-    @item28 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 3100)
-    # @item35 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 3200)
-    # @item36 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 3300)
+    @invoice3 = create(:invoice, customer: @customer3, status: 1)
+    @invoice_item3 = create(:invoice_item, invoice: @invoice3, item: @item3, quantity: 1, unit_price: @item3.unit_price, status: 1)
+    4.times { create(:transaction, invoice: @invoice3, result: 'success') }
 
-    #high tier items
-    @item29 = FactoryBot.create(:item, merchant: @merchant3, unit_price: 11000)
-    @item30 = FactoryBot.create(:item, merchant: @merchant3, unit_price: 12000)
-    @item31 = FactoryBot.create(:item, merchant: @merchant3, unit_price: 13000)
-    @item32 = FactoryBot.create(:item, merchant: @merchant3, unit_price: 21000)
-    @item33 = FactoryBot.create(:item, merchant: @merchant3, unit_price: 22000)
-    @item34 = FactoryBot.create(:item, merchant: @merchant3, unit_price: 23000)
-    @item35 = FactoryBot.create(:item, merchant: @merchant3, unit_price: 31000)
-    # @item44 = FactoryBot.create(:item, merchant: @merchant3, unit_price: 32000)
-    # @item45 = FactoryBot.create(:item, merchant: @merchant3, unit_price: 33000)
+    @invoice4 = create(:invoice, customer: @customer4, status: 1)
+    @invoice_item4 = create(:invoice_item, invoice: @invoice4, item: @item4, quantity: 1, unit_price: @item4.unit_price, status: 1)
+    5.times { create(:transaction, invoice: @invoice4, result: 'success') }
 
-    #invoices
-    @invoices_tier1 = [
-      @invoice1 = FactoryBot.create(:invoice, customer: @customer1, status: 0),
-      @invoice2 = FactoryBot.create(:invoice, customer: @customer1, status: 1),
-      @invoice3 = FactoryBot.create(:invoice, customer: @customer1, status: 1),
-      @invoice4 = FactoryBot.create(:invoice, customer: @customer1, status: 1),
-      @invoice5 = FactoryBot.create(:invoice, customer: @customer1, status: 1),
+    @invoice5 = create(:invoice, customer: @customer5, status: 1)
+    @invoice_item5 = create(:invoice_item, invoice: @invoice5, item: @item1, quantity: 1, unit_price: @item1.unit_price, status: 1)
+    3.times { create(:transaction, invoice: @invoice5, result: 'success') }
 
-      @invoice6 = FactoryBot.create(:invoice, customer: @customer2, status: 0),
-      @invoice7 = FactoryBot.create(:invoice, customer: @customer2, status: 1),
-      @invoice8 = FactoryBot.create(:invoice, customer: @customer2, status: 1),
-      @invoice9 = FactoryBot.create(:invoice, customer: @customer2, status: 1),
+    @invoice6 = create(:invoice, customer: @customer6, status: 0)
+    @invoice_item6 = create(:invoice_item, invoice: @invoice6, item: @item2, quantity: 1, unit_price: @item2.unit_price, status:01)
+    create(:transaction, invoice: @invoice6, result: 'success')
 
-      @invoice10 = FactoryBot.create(:invoice, customer: @customer3, status: 0),
-      @invoice11 = FactoryBot.create(:invoice, customer: @customer3, status: 0),
-      @invoice12 = FactoryBot.create(:invoice, customer: @customer3, status: 1),
-      @invoice13 = FactoryBot.create(:invoice, customer: @customer3, status: 1)
-    ]
-    @invoice14 = FactoryBot.create(:invoice, customer: @customer4, status: 0)
-    @invoice15 = FactoryBot.create(:invoice, customer: @customer4, status: 0)
-    @invoice16 = FactoryBot.create(:invoice, customer: @customer4, status: 0)
+    @invoice7 = create(:invoice, customer: @customer7, status: 0)
+    @invoice_item7 = create(:invoice_item, invoice: @invoice7, item: @item3, quantity: 1, unit_price: @item3.unit_price, status:01)
+    create(:transaction, invoice: @invoice7, result: 'success')
 
-    @invoice17 = FactoryBot.create(:invoice, customer: @customer5, status: 1)
-    @invoice18 = FactoryBot.create(:invoice, customer: @customer5, status: 1)
-    # @invoice19 = FactoryBot.create(:invoice, customer: @customer5, status: 1)
-    
-    @invoices_tier2 = [
-    @invoice19 = FactoryBot.create(:invoice, customer: @customer6, status: 1),
-    # @invoice21 = FactoryBot.create(:invoice, customer: @customer6, status: 2)
-    # @invoice22 = FactoryBot.create(:invoice, customer: @customer6, status: 2)
-
-    @invoice20 = FactoryBot.create(:invoice, customer: @customer7, status: 0)
-    # @invoice24 = FactoryBot.create(:invoice, customer: @customer7, status: 1)
-    # @invoice25 = FactoryBot.create(:invoice, customer: @customer7, status: 2)
-
-    # @invoice26 = FactoryBot.create(:invoice, customer: @customer8, status: 0)
-    # @invoice27 = FactoryBot.create(:invoice, customer: @customer8, status: 1)
-    # @invoice28 = FactoryBot.create(:invoice, customer: @customer8, status: 1)
-
-    # @invoice29 = FactoryBot.create(:invoice, customer: @customer9, status: 0)
-    # @invoice30 = FactoryBot.create(:invoice, customer: @customer9, status: 0)
-    # @invoice31 = FactoryBot.create(:invoice, customer: @customer9, status: 0)
-
-    # @invoice32 = FactoryBot.create(:invoice, customer: @customer10, status: 2)
-    # @invoice33 = FactoryBot.create(:invoice, customer: @customer10, status: 2)
-    # @invoice34 = FactoryBot.create(:invoice, customer: @customer10, status: 2)
-    ]
-
-    # @transaction1 = FactoryBot.create(:transaction, invoice: @invoice1, result: "success")
-    # @transaction2 = FactoryBot.create(:transaction, invoice: @invoice1)
-    # @transaction3 = FactoryBot.create(:transaction, invoice: @invoice1)
-
-    [@invoice1, @invoice2, @invoice3, @invoice4, @invoice5].each do |invoice|
-      3.times do
-        FactoryBot.create(:transaction, invoice: invoice, result: "success")
-      end
-    end
-    
-    [@invoice6, @invoice7, @invoice8, @invoice9].each do |invoice|
-      3.times do
-        FactoryBot.create(:transaction, invoice: invoice, result: "success")
-      end
-    end
-    
-    [@invoice10, @invoice11, @invoice12, @invoice13].each do |invoice|
-      3.times do
-        FactoryBot.create(:transaction, invoice: invoice, result: "success")
-      end
-    end
-
-    FactoryBot.create(:transaction, invoice: @invoice15, result: "failed")
-    FactoryBot.create(:transaction, invoice: @invoice16, result: "failed")
-    FactoryBot.create(:transaction, invoice: @invoice17, result: "success")
-
-    FactoryBot.create(:transaction, invoice: @invoice18, result: "success")
-    FactoryBot.create(:transaction, invoice: @invoice19, result: "failed")
-    FactoryBot.create(:transaction, invoice: @invoice20, result: "success")
-
-    @invoices_tier2.each do |invoice|
-      3.times do
-        FactoryBot.create(:transaction, invoice: invoice, result: "success")
-      end
-    end
-
-    @invoice_item1 = FactoryBot.create(:invoice_item, invoice: @invoice1, item: @item1, quantity: 1, unit_price: @item1.unit_price)
-    @invoice_item2 = FactoryBot.create(:invoice_item, invoice: @invoice1, item: @item2, quantity: 2, unit_price: @item2.unit_price)
-
-    @invoice_item3 = FactoryBot.create(:invoice_item, invoice: @invoice2, item: @item3, quantity: 2, unit_price: @item3.unit_price)
-    @invoice_item4 = FactoryBot.create(:invoice_item, invoice: @invoice2, item: @item4, quantity: 2, unit_price: @item4.unit_price)
-    
-    @invoice_item5 = FactoryBot.create(:invoice_item, invoice: @invoice3, item: @item5, quantity: 2, unit_price: @item5.unit_price)
-    @invoice_item6 = FactoryBot.create(:invoice_item, invoice: @invoice3, item: @item6, quantity: 2, unit_price: @item6.unit_price)
-    
-    @invoice_item7 = FactoryBot.create(:invoice_item, invoice: @invoice4, item: @item7, quantity: 2, unit_price: @item7.unit_price)
-
-    @invoice_item8 = FactoryBot.create(:invoice_item, invoice: @invoice5, item: @item8, quantity: 2, unit_price: @item8.unit_price)
-    @invoice_item9 = FactoryBot.create(:invoice_item, invoice: @invoice5, item: @item9, quantity: 2, unit_price: @item9.unit_price)
-    
-    @invoice_item10 = FactoryBot.create(:invoice_item, invoice: @invoice6, item: @item10, quantity: 3, unit_price: @item10.unit_price)
-    
-    @invoice_item11 = FactoryBot.create(:invoice_item, invoice: @invoice7, item: @item11, quantity: 3, unit_price: @item11.unit_price)
-    @invoice_item12 = FactoryBot.create(:invoice_item, invoice: @invoice7, item: @item12, quantity: 3, unit_price: @item12.unit_price)
-    
-    @invoice_item13 = FactoryBot.create(:invoice_item, invoice: @invoice8, item: @item13, quantity: 3, unit_price: @item13.unit_price)
-    @invoice_item14 = FactoryBot.create(:invoice_item, invoice: @invoice8, item: @item14, quantity: 3, unit_price: @item14.unit_price)
-    
-    @invoice_item15 = FactoryBot.create(:invoice_item, invoice: @invoice9, item: @item15, quantity: 3, unit_price: @item15.unit_price)
-    @invoice_item16 = FactoryBot.create(:invoice_item, invoice: @invoice10, item: @item16, quantity: 1, unit_price: @item16.unit_price)
-    @invoice_item17 = FactoryBot.create(:invoice_item, invoice: @invoice11, item: @item17, quantity: 1, unit_price: @item17.unit_price)
-    @invoice_item18 = FactoryBot.create(:invoice_item, invoice: @invoice12, item: @item18, quantity: 1, unit_price: @item18.unit_price)
-    @invoice_item19 = FactoryBot.create(:invoice_item, invoice: @invoice13, item: @item19, quantity: 1, unit_price: @item19.unit_price)
-    @invoice_item20 = FactoryBot.create(:invoice_item, invoice: @invoice14, item: @item20, quantity: 1, unit_price: @item20.unit_price)
-    @invoice_item21 = FactoryBot.create(:invoice_item, invoice: @invoice15, item: @item21, quantity: 1, unit_price: @item21.unit_price)
-    @invoice_item22 = FactoryBot.create(:invoice_item, invoice: @invoice16, item: @item22, quantity: 1, unit_price: @item22.unit_price)
-    @invoice_item23 = FactoryBot.create(:invoice_item, invoice: @invoice17, item: @item23, quantity: 1, unit_price: @item23.unit_price)
-    @invoice_item24 = FactoryBot.create(:invoice_item, invoice: @invoice18, item: @item24, quantity: 1, unit_price: @item24.unit_price)
-    @invoice_item25 = FactoryBot.create(:invoice_item, invoice: @invoice19, item: @item25, quantity: 1, unit_price: @item25.unit_price)
+    #for false positives
+    @merchant2 = create(:merchant)
+    @item8 = create(:item, merchant: @merchant2, unit_price: 7000)
+  
+    @invoice8 = create(:invoice, customer: @customer7, status: 1)
+    @invoice_item8 = create(:invoice_item, invoice: @invoice8, item: @item8, quantity: 1, unit_price: @item8.unit_price, status: 1)
+    8.times { create(:transaction, invoice: @invoice8, result: 'success') }
   end
-  it "displays the name of the merchant" do
-    visit "/merchants/#{@merchant1.id}/dashboard"
 
-    expect(page).to have_content(@merchant1.name)
+  it "displays the name of the merchant" do
+    visit "/merchants/#{@merchant.id}/dashboard"
+
+    expect(page).to have_content(@merchant.name)
   end
 
   it "has links for merchant items index and merchant invoices index" do
-    visit "/merchants/#{@merchant1.id}/dashboard"
+    visit "/merchants/#{@merchant.id}/dashboard"
 
     expect(page).to have_link("Items Index")
     expect(page).to have_link("Invoices Index")
+  end
+
+  # 3. Merchant Dashboard Statistics - Favorite Customers
+  # As a merchant,
+  # When I visit my merchant dashboard (/merchants/:merchant_id/dashboard)
+  # Then I see the names of the top 5 customers
+  # who have conducted the largest number of successful transactions with my merchant
+  # And next to each customer name I see the number of successful transactions they have
+  # conducted with my merchant
+  it "has top 5 customer names each with successful transaction count with merchant" do
+    visit "/merchants/#{@merchant.id}/dashboard"
+
+    within "#favorite_customers" do
+      expect(page).to have_content("#{@customer1.first_name} #{@customer1.last_name} - #{@customer1.successful_transactions_with_merchant(@merchant)} purchases")
+      expect(page).to have_content("#{@customer2.first_name} #{@customer2.last_name} - #{@customer2.successful_transactions_with_merchant(@merchant)} purchases")
+      expect(page).to have_content("#{@customer3.first_name} #{@customer3.last_name} - #{@customer3.successful_transactions_with_merchant(@merchant)} purchases")
+      expect(page).to have_content("#{@customer4.first_name} #{@customer4.last_name} - #{@customer4.successful_transactions_with_merchant(@merchant)} purchases")
+      expect(page).to have_content("#{@customer5.first_name} #{@customer5.last_name} - #{@customer5.successful_transactions_with_merchant(@merchant)} purchases")
+    end
+  end
+
+  # 4. Merchant Dashboard Items Ready to Ship
+  # As a merchant
+  # When I visit my merchant dashboard (/merchants/:merchant_id/dashboard)
+  # Then I see a section for "Items Ready to Ship"
+  # In that section I see a list of the names of all of my items that
+  # have been ordered and have not yet been shipped,
+  # And next to each Item I see the id of the invoice that ordered my item
+  # And each invoice id is a link to my merchant's invoice show page
+  it "has list of all items name each with its invoice id as a link to merchant invoice show page" do
+    visit "/merchants/#{@merchant.id}/dashboard"
+
+    within "#items_ready_to_ship" do
+      expect(page).to have_content("#{@item1.name} - Invoice ##{@invoice1.id} - #{@invoice1.created_at.strftime("%A, %B %d, %Y")}")
+      expect(page).to have_content("#{@item2.name} - Invoice ##{@invoice2.id} - #{@invoice2.created_at.strftime("%A, %B %d, %Y")}")
+      expect(page).to have_content("#{@item3.name} - Invoice ##{@invoice3.id} - #{@invoice3.created_at.strftime("%A, %B %d, %Y")}")
+      expect(page).to have_content("#{@item4.name} - Invoice ##{@invoice4.id} - #{@invoice4.created_at.strftime("%A, %B %d, %Y")}")
+      
+      expect(page).to have_link("#{@invoice1.id}", href: "/merchants/#{@merchant.id}/invoices/#{@invoice1.id}")
+      expect(page).to have_link("#{@invoice2.id}", href: "/merchants/#{@merchant.id}/invoices/#{@invoice2.id}")
+      expect(page).to have_link("#{@invoice3.id}", href: "/merchants/#{@merchant.id}/invoices/#{@invoice3.id}")
+    end
+
+    
+  end
+
+  # 5. Merchant Dashboard Invoices sorted by least recent
+  # As a merchant
+  # When I visit my merchant dashboard (/merchants/:merchant_id/dashboard)
+  # In the section for "Items Ready to Ship",
+  # Next to each Item name I see the date that the invoice was created
+  # And I see the date formatted like "Monday, July 18, 2019"
+  # And I see that the list is ordered from oldest to newest
+  it "can see date on invoice creation next to each item ordered from oldest to newest" do
+    @invoice1.created_at = "2022-01-22 00:00:00"
+    @invoice1.save
+    @invoice2.created_at = "2022-02-22 00:00:00"
+    @invoice2.save
+    @invoice3.created_at = "2022-03-22 00:00:00"
+    @invoice3.save
+    @invoice4.created_at = "2022-04-22 00:00:00"
+    @invoice4.save
+    @invoice5.created_at = "2022-05-22 00:00:00"
+    @invoice5.save
+    @invoice6.created_at = "2022-01-21 00:00:00"
+    @invoice6.save
+    @invoice7.created_at = "2022-01-23 00:00:00"
+    @invoice7.save
+    visit "/merchants/#{@merchant.id}/dashboard"
+
+    within "#items_ready_to_ship" do
+      expect("Invoice ##{@invoice6.id}").to appear_before("Invoice ##{@invoice1.id}", only_text: true)
+      expect("Invoice ##{@invoice1.id}").to appear_before("Invoice ##{@invoice7.id}", only_text: true)
+      expect("Invoice ##{@invoice2.id}").to appear_before("Invoice ##{@invoice3.id}", only_text: true)
+      expect("Invoice ##{@invoice4.id}").to appear_before("Invoice ##{@invoice5.id}", only_text: true)
+    end
   end
 end

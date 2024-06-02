@@ -54,5 +54,4 @@ Invoice.all.each do |invoice|
     FactoryBot.create(:invoice_item, invoice: invoice, item: item, quantity: rand(1..10), unit_price: item.unit_price)
   end
 end
-
 puts "Seeding complete!"
