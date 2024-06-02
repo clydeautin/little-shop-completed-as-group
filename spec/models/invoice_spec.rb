@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "the merchant dashboard page" do
+RSpec.describe Invoice, type: :model do
   before(:each) do
     #budget merchant
     @merchant1 = FactoryBot.create(:merchant)
@@ -194,43 +194,19 @@ RSpec.describe "the merchant dashboard page" do
     @invoice_item23 = FactoryBot.create(:invoice_item, invoice: @invoice17, item: @item23, quantity: 1, unit_price: @item23.unit_price)
     @invoice_item24 = FactoryBot.create(:invoice_item, invoice: @invoice18, item: @item24, quantity: 1, unit_price: @item24.unit_price)
     @invoice_item25 = FactoryBot.create(:invoice_item, invoice: @invoice19, item: @item25, quantity: 1, unit_price: @item25.unit_price)
-  
+  end
+  describe "relationships" do
+    it {should belong_to :customer}
+    it {should have_many :invoice_items}
+    it {should have_many(:items).through(:invoice_items)}
+    it {should have_many :transactions}
   end
 
-  describe "as a merchant" do
-    describe "when I visit my merchant's invoice show page" do
-      it "has invoice id, invoice status, invoice created date and customer first and last name" do
-        visit merchant_invoice_path(@merchant1, @invoice1)
-
-        formatted_date = @invoice1.created_at.strftime("%A, %B %d, %Y")
-        # save_and_open_page
-        # require 'pry'; binding.pry
-        expect(page).to have_content("Invoice id: #{@invoice1.id}")
-        expect(page).to have_content("Status: #{@invoice1.status}")
-        expect(page).to have_content("Created_at: #{formatted_date}")
-        expect(page).to have_content("Customer first name: #{@invoice1.customer.first_name}")
-        expect(page).to have_content("Customer last name: #{@invoice1.customer.last_name}")
-      end
-
-      it "shows all of my items on the invoice" do
-        visit merchant_invoice_path(@merchant1, @invoice1)
-
-        @invoice1.invoice_items.each do |invoice_item|
-          within "#invoice-item-#{invoice_item.item.id}" do
-          expect(page).to have_content("Item Name: #{invoice_item.item.name}")
-          expect(page).to have_content("Quantity Ordered: #{invoice_item.quantity}")
-          expect(page).to have_content("Price Sold For: $#{invoice_item.unit_price}")
-          expect(page).to have_content("Invoice Item Status: #{invoice_item.status}")
-          end
-        end
-      end
-
-      it 'shows total revenue for all items on the invoice' do
-        visit merchant_invoice_path(@merchant1, @invoice1)
-        expect(page).to have_content("Total Invoice Revenue: $350")
-        save_and_open_page
-      end
+  describe "instance methods" do
+    it 'can calculate total revenue' do
+      expect(@invoice7.total_revenue).to eq(12900)
     end
   end
+
 
 end
