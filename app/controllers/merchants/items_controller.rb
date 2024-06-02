@@ -12,12 +12,12 @@ class Merchants::ItemsController < ApplicationController
   def update
     @item = Item.find(params[:item_id])
     @merchant = Merchant.find(params[:merchant_id])
-    # pry
+    
 
     if @item.update(item_params)
-      redirect_to "merchant/#{@merchant.id}/items/#{@item.id}"
+      redirect_to "/merchants/#{@merchant.id}/items/#{@item.id}"
     else
-      redirect_to "merchant/#{@merchant.id}/items/#{@item.id}/edit"
+      redirect_to "/merchants/#{@merchant.id}/items/#{@item.id}/edit"
       flash[:alert] = "Error: #{error_message(@item.errors)}"
     end
   end
