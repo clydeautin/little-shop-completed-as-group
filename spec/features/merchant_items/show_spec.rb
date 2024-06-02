@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "the merchant item index page" do
+RSpec.describe "the merchant item show page" do
   before(:each) do
     @merchant = create(:merchant)
 
@@ -56,22 +56,25 @@ RSpec.describe "the merchant item index page" do
     8.times { create(:transaction, invoice: @invoice8, result: 'success') }
   end
 
-  # 7. Merchant Items Show Page
-  # As a merchant,
-  # When I click on the name of an item from the merchant items index page, (merchants/:merchant_id/items)
-  # Then I am taken to that merchant's item's show page (/merchants/:merchant_id/items/:item_id)
-  # And I see all of the item's attributes including:
-  # - Name
-  # - Description
-  # - Current Selling Price
-  describe "US 7" do
-    it "I see all of the item's attributes including: Name, Description, Current Selling Price" do
-      visit "/merchants/#{@merchant.id}/items/#{@item1.id}"
-save_and_open_page
-      within "#items_attr" do
-        expect(page).to have_content(@item1.name)
-        expect(page).to have_content("Description: #{@item1.description}")
-        expect(page).to have_content("Current Price: #{@item1.unit_price}")
+# 6. Merchant Items Index Page
+# As a merchant,
+# When I visit my merchant items index page (merchants/:merchant_id/items)
+# I see a list of the names of all of my items
+# And I do not see items for any other merchant
+  describe "US 6" do
+    it "I see a list of the names of all of my items and I do not see items for any other merchant" do
+      visit "/merchants/#{@merchant.id}/items"
+
+      within "#merchant_items" do
+        @merchant.items.each do |item|
+          expect(page).to have_content(item.name)
+        end
+      end
+
+      within "#merchant_items" do
+        @merchant2.items.each do |item|
+          expect(page).to_not have_content(item.name)
+        end
       end
     end
   end
