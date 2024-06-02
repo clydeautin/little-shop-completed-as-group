@@ -27,7 +27,3 @@ class Merchant < ApplicationRecord
       .distinct
   end
 end
-
-
-"Durable Leather Knife - Invoice #6920 - 2024-06-01 22:59:35 UTC"
-"Durable Leather Knife - Invoice # 6920 - 2024-06-01 22:59:35 UTC"
