@@ -64,4 +64,23 @@ class Merchant < ApplicationRecord
   def self.disabled_merchants
     where("merchants.status = 1")
   end
+
+  def self.top_five_merchants
+    Merchant.joins(:transactions)
+     .where(transactions: { result: 'success' })
+     .select('merchants.*, sum(invoice_items.quantity * invoice_items.unit_price) as total_revenue')
+     .group(:id)
+     .order('total_revenue desc')
+     .limit(5)
+  end
+
+  def merchant_best_day
+    invoice_items.joins(:transactions)
+      .where("transactions.result = 'success'")
+      .select('invoices.created_at, sum(invoice_items.quantity)')
+      .group('invoices.created_at')
+      .order('sum(invoice_items.quantity) desc')
+      .limit(1)
+      .pluck('invoices.created_at')[0]
+  end
 end

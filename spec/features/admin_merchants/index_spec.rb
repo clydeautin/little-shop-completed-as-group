@@ -55,6 +55,27 @@ RSpec.describe "the admin merchants index" do
     @invoice8 = create(:invoice, customer: @customer7, status: 1)
     @invoice_item8 = create(:invoice_item, invoice: @invoice8, item: @item8, quantity: 1, unit_price: @item8.unit_price, status: 1)
     8.times { create(:transaction, invoice: @invoice8, result: 'success') }
+
+    @merchant3 = create(:merchant, status: 1)
+    @item9 = create(:item, merchant: @merchant3, unit_price: 1000)
+  
+    @invoice9 = create(:invoice, customer: @customer7, status: 1)
+    @invoice_item9 = create(:invoice_item, invoice: @invoice9, item: @item9, quantity: 1, unit_price: @item9.unit_price, status: 1)
+    1.times { create(:transaction, invoice: @invoice9, result: 'success') }
+
+    @merchant4 = create(:merchant, status: 1)
+    @item10 = create(:item, merchant: @merchant4, unit_price: 1000)
+  
+    @invoice10 = create(:invoice, customer: @customer7, status: 1)
+    @invoice_item10 = create(:invoice_item, invoice: @invoice10, item: @item10, quantity: 1, unit_price: @item10.unit_price, status: 1)
+    2.times { create(:transaction, invoice: @invoice10, result: 'success') }
+
+    @merchant5 = create(:merchant, status: 1)
+    @item11 = create(:item, merchant: @merchant5, unit_price: 1000)
+  
+    @invoice11 = create(:invoice, customer: @customer7, status: 1)
+    @invoice_item11 = create(:invoice_item, invoice: @invoice11, item: @item11, quantity: 1, unit_price: @item11.unit_price, status: 1)
+    3.times { create(:transaction, invoice: @invoice11, result: 'success') }
   end
 
   it "displays names of all merchants" do
@@ -127,4 +148,29 @@ RSpec.describe "the admin merchants index" do
 
     expect(current_path).to eq(new_admin_merchant_path)
   end
+
+  it "displays top five merchants in order" do
+    visit admin_merchants_path
+    within "#top_five" do
+      expect(@merchant2.name).to appear_before(@merchant.name)
+      expect(@merchant.name).to appear_before(@merchant5.name)
+      expect(@merchant5.name).to appear_before(@merchant4.name)
+      expect(@merchant4.name).to appear_before(@merchant3.name)
+
+      expect(page).to have_link("#{@merchant2.name}")
+
+      expect(@merchant2.name).to appear_before("Total Revenue Generated: $560.00")
+      expect("Total Revenue Generated: $560.00").to appear_before(@merchant.name)
+      expect(@merchant.name).to appear_before("Total Revenue Generated: $500.00")
+    end
+  end
+
+  it "displays biggest day for most popular items" do
+    visit admin_merchants_path
+
+    within "#top_five" do
+      expect(page).to have_content("Top selling date for #{@merchant2.name} was #{@invoice8.created_at.strftime("%A, %B %d, %Y")}")
+    end
+  end
+
 end

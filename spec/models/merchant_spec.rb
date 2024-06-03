@@ -108,6 +108,12 @@ RSpec.describe Merchant do
         expect(@merchant.top_five_items).to eq([@item4, @item3, @item1, @item2, @item5])
       end
     end
+
+    describe "merchant_best_day" do
+      it "returns the top selling day of a merchant" do
+        expect(@merchant2.merchant_best_day).to eq(@invoice8.created_at)
+      end
+    end
   end
 
   describe "class methods" do
@@ -116,6 +122,32 @@ RSpec.describe Merchant do
 
         expect(Merchant.top_five_customers).to eq([@customer7, @customer1, @customer4, @customer3, @customer5])
         end
+    end
+
+    describe "top_five_merchants" do
+      it "can return the top 5 merchants" do
+        @merchant3 = create(:merchant, status: 1)
+        @item9 = create(:item, merchant: @merchant3, unit_price: 1000)
+      
+        @invoice9 = create(:invoice, customer: @customer7, status: 1)
+        @invoice_item9 = create(:invoice_item, invoice: @invoice9, item: @item9, quantity: 1, unit_price: @item9.unit_price, status: 1)
+        1.times { create(:transaction, invoice: @invoice9, result: 'success') }
+
+        @merchant4 = create(:merchant, status: 1)
+        @item10 = create(:item, merchant: @merchant4, unit_price: 1000)
+      
+        @invoice10 = create(:invoice, customer: @customer7, status: 1)
+        @invoice_item10 = create(:invoice_item, invoice: @invoice10, item: @item10, quantity: 1, unit_price: @item10.unit_price, status: 1)
+        2.times { create(:transaction, invoice: @invoice10, result: 'success') }
+
+        @merchant5 = create(:merchant, status: 1)
+        @item11 = create(:item, merchant: @merchant5, unit_price: 1000)
+      
+        @invoice11 = create(:invoice, customer: @customer7, status: 1)
+        @invoice_item11 = create(:invoice_item, invoice: @invoice11, item: @item11, quantity: 1, unit_price: @item11.unit_price, status: 1)
+        3.times { create(:transaction, invoice: @invoice11, result: 'success') }
+        expect(Merchant.top_five_merchants).to eq([@merchant2, @merchant, @merchant5, @merchant4, @merchant3])
+      end
     end
   end
 end

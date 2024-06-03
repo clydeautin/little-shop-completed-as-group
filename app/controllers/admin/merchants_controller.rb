@@ -3,6 +3,7 @@ class Admin::MerchantsController < ApplicationController
     @merchants = Merchant.all
     @enabled_merchants = Merchant.enabled_merchants
     @disabled_merchants = Merchant.disabled_merchants
+    @top_five_merchants = Merchant.top_five_merchants
   end
 
   def show
