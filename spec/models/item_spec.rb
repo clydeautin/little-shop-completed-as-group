@@ -73,7 +73,7 @@ RSpec.describe Item do
 
   describe "#best_day" do
     it "should be able to return the best day for an item" do
-      expect(@item1.best_day).to eq(@invoice1.created_at.strftime("%A, %B %d, %Y"))
+      expect(@item1.best_day).to eq(@invoice1.created_at)
     end
   end
 end

@@ -27,5 +27,3 @@ namespace :admin do
 end
 
 end
-
-# resources :dashboard, only: [:index], controller: 'merchants/dashboard'
