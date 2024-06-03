@@ -73,9 +73,9 @@ RSpec.describe "the merchant item index page" do
     click_on "Update Item"
     
     within "#update_attr" do
-      fill_in "name", with: "I HAVE" 
-      fill_in "description", with: "Power level OVER" 
-      fill_in "price", with: 9000
+      fill_in "Name", with: "I HAVE" 
+      fill_in "Description", with: "Power level OVER" 
+      fill_in "Unit price", with: 9000
     end
 
     click_button "Update"
@@ -86,7 +86,6 @@ RSpec.describe "the merchant item index page" do
       expect(page).to have_content("I HAVE")
       expect(page).to have_content("Description: Power level OVER")
       expect(page).to have_content("Current Price: 9000")
-# need to test for sad path/edge cases
     end
   end
 
@@ -94,9 +93,9 @@ RSpec.describe "the merchant item index page" do
     visit "/merchants/#{@merchant.id}/items/#{@item1.id}/edit"
 
     within "#update_attr" do
-      fill_in "name", with: "" 
-      fill_in "description", with: "" 
-      fill_in "price", with: ""
+      fill_in "Name", with: "" 
+      fill_in "Description", with: "" 
+      fill_in "Unit price", with: ""
     end
 
     click_button "Update"

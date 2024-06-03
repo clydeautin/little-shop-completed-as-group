@@ -18,12 +18,14 @@ resources :merchants, only: [] do
   resources :items, only: [:index, :show, :edit, :new, :create], controller: 'merchants/items'
 end
 
-patch "/merchants/:merchant_id/items/:item_id", to: "merchants/items#update"
+patch "/merchants/:merchant_id/items/:id", to: "merchants/items#update", as: "merchant_item_update"
 
 resources :admin, only: :index
 
 namespace :admin do
-  resources :merchants, only: [:index, :show]
+  resources :merchants, only: [:index, :show, :edit]
 end
+
+patch "/admin/merchants/:id", to: "admin/merchants#update"
 
 end
