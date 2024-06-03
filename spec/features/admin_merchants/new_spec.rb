@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "the merchant item new page" do
+RSpec.describe "the admin merchant new page" do
   before(:each) do
     @merchant = create(:merchant)
 
@@ -56,31 +56,29 @@ RSpec.describe "the merchant item new page" do
     8.times { create(:transaction, invoice: @invoice8, result: 'success') }
   end
 
-  it "has a form to create a new item" do
-    visit new_merchant_item_path(merchant_id: @merchant)
+  it "has a form to create a new merchant" do
+    visit new_admin_merchant_path
 
-    within "#new_item" do
-      fill_in "name", with: "I HAVE" 
-      fill_in "description", with: "Power level OVER" 
-      fill_in "price", with: 9000
+    within "#new_merchant" do
+      fill_in "Name", with: "New Merchant" 
     end
 
     click_button("Submit")
 
-    expect(current_path).to eq(merchant_items_path(@merchant))
+    expect(current_path).to eq(admin_merchants_path)
 
-    within "#disabled_items" do
-      expect(page).to have_link("I HAVE")
+    within "#disabled_merchants" do
+      expect(page).to have_link("New Merchant")
     end
   end
 
-  describe "create new item sad path" do
+  describe "create new merchant sad path" do
     it "will not allow you to submit the new item form with all attributes filled in" do
-      visit new_merchant_item_path(merchant_id: @merchant)
+      visit new_admin_merchant_path
 
       click_button("Submit")
 
-      expect(page).to have_content("Error: Name can't be blank, Description can't be blank, Unit price can't be blank")
+      expect(page).to have_content("Error: Name can't be blank")
     end
   end
 end

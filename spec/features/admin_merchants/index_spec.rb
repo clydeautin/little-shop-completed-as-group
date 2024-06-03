@@ -75,23 +75,13 @@ RSpec.describe "the admin merchants index" do
     visit admin_merchants_path
 
     within "#merchant-#{@merchant.id}" do
-      if @merchant.status == "enabled"
-        expect(page).to have_content(@merchant.name)
-        expect(page).to have_button("Disable")
-      elsif @merchant.status == "disabled"
-        expect(page).to have_content(@merchant.name)
-        expect(page).to have_button("Enable")
-      end
+      expect(page).to have_content(@merchant.name)
+      expect(page).to have_button("Disable")
     end
 
     within "#merchant-#{@merchant2.id}" do
-      if @merchant2.status == "enabled"
-        expect(page).to have_content(@merchant2.name)
-        expect(page).to have_button("Disable")
-      elsif @merchant2.status == "disabled"
-        expect(page).to have_content(@merchant2.name)
-        expect(page).to have_button("Enable")
-      end
+      expect(page).to have_content(@merchant2.name)
+      expect(page).to have_button("Enable")
     end
 
     within "#merchant-#{@merchant.id}" do
@@ -128,13 +118,13 @@ RSpec.describe "the admin merchants index" do
     end
   end
 
-  xit "has a link to create new merchant" do
+  it "has a link to create new merchant" do
     visit admin_merchants_path
 
     expect(page).to have_link("Create New Merchant")
 
     click_link("Create New Merchant")
 
-    expect(current_path).to eq(new_merchant_item_path(merchant_id: @merchant))
+    expect(current_path).to eq(new_admin_merchant_path)
   end
 end

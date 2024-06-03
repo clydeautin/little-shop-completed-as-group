@@ -15,7 +15,7 @@ class Admin::MerchantsController < ApplicationController
 
   def update
     @merchant = Merchant.find(params[:id])
-    
+
     if params[:status].present? && @merchant.update({status: params[:status]})
       redirect_to admin_merchants_path
     elsif @merchant.update(merchant_params)
@@ -24,6 +24,21 @@ class Admin::MerchantsController < ApplicationController
     else
       flash[:alert] = "Error: #{error_message(@merchant.errors)}"
       render :edit
+    end
+  end
+
+  def new
+  end
+
+  def create
+    params[:status] = 1
+    merchant = Merchant.new(merchant_params)
+    
+    if merchant.save
+      redirect_to admin_merchants_path
+    else
+      flash[:alert] = "Error: #{error_message(merchant.errors)}"
+      render :new
     end
   end
 
