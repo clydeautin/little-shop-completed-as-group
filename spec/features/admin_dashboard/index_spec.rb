@@ -105,4 +105,28 @@ RSpec.describe "the merchant dashboard page" do
       expect(page).to have_link("#{@invoice8.id}", href: "/admin/invoices/#{@invoice8.id}")
     end
   end
+
+  it "can see invoice created date next to each invoice ordered from oldest to newest" do
+    @invoice1.created_at = "2022-01-22 00:00:00"
+    @invoice1.save
+    @invoice2.created_at = "2022-02-22 00:00:00"
+    @invoice2.save
+    @invoice3.created_at = "2021-03-22 00:00:00"
+    @invoice3.save
+    @invoice4.created_at = "2022-04-22 00:00:00"
+    @invoice4.save
+    @invoice5.created_at = "2021-05-22 00:00:00"
+    @invoice5.save
+    @invoice6.created_at = "2022-01-21 00:00:00"
+    @invoice6.save
+    @invoice7.created_at = "2022-01-23 00:00:00"
+    @invoice7.save
+    visit "/admin"
+
+    within "#incomplete_invoices" do
+      expect("Invoice ##{@invoice1.id}").to appear_before("Invoice ##{@invoice7.id}", only_text: true)
+      expect("Invoice ##{@invoice7.id}").to appear_before("Invoice ##{@invoice2.id}", only_text: true)
+      expect("Invoice ##{@invoice2.id}").to appear_before("Invoice ##{@invoice8.id}", only_text: true)
+    end
+  end
 end
