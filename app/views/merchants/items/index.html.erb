@@ -1,11 +1,12 @@
 <h1>Items Index</h1>
+<%= link_to "Create New Item", new_merchant_item_path %>
 <div id="merchant_items">
 <h3>Enabled Items</h3>
 <div id="enabled_items">
   <% @enabled_items.each do |item| %>
     <div id="item-<%= item.id %>">
-        <%= "Item Name: #{item.name}" %>
-        <%= button_to "Disable", "/merchants/#{@merchant.id}/items/#{item.id}?status=disabled", method: :patch, data: { turbo: true }, local: true %>
+      <%= link_to "#{item.name}", merchant_item_path(merchant_id: item.merchant, id: item) %>
+      <%= button_to "Disable", "/merchants/#{@merchant.id}/items/#{item.id}?status=disabled", method: :patch, data: { turbo: true }, local: true %>
     </div>
   <% end %>
 </div>
@@ -13,8 +14,8 @@
 <h3>Disabled Items</h3>
   <% @disabled_items.each do |item| %>
     <div id="item-<%= item.id %>">
-        <%= "Item Name: #{item.name}" %>
-        <%= button_to "Enable", "/merchants/#{@merchant.id}/items/#{item.id}?status=enabled", method: :patch, data: { turbo: true }, local: true %>
+      <%= link_to "#{item.name}", merchant_item_path(merchant_id: item.merchant, id: item) %>
+      <%= button_to "Enable", "/merchants/#{@merchant.id}/items/#{item.id}?status=enabled", method: :patch, data: { turbo: true }, local: true %>
     </div>
   <% end %>
 </div>

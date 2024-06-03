@@ -27,6 +27,21 @@ class Merchants::ItemsController < ApplicationController
     end
   end
 
+  def new
+  end
+
+  def create
+    params[:status] = 1
+    item = Item.new(item_params)
+    
+    if item.save
+      redirect_to merchant_items_path
+    else
+      flash[:alert] = "Error: #{error_message(item.errors)}"
+      render :new
+    end
+  end
+
   private
 
   def item_params
