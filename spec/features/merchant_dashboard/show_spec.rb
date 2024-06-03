@@ -41,11 +41,11 @@ RSpec.describe "the merchant dashboard page" do
     3.times { create(:transaction, invoice: @invoice5, result: 'success') }
 
     @invoice6 = create(:invoice, customer: @customer6, status: 0)
-    @invoice_item6 = create(:invoice_item, invoice: @invoice6, item: @item2, quantity: 1, unit_price: @item2.unit_price, status:01)
+    @invoice_item6 = create(:invoice_item, invoice: @invoice6, item: @item2, quantity: 1, unit_price: @item2.unit_price, status: 0)
     create(:transaction, invoice: @invoice6, result: 'success')
 
     @invoice7 = create(:invoice, customer: @customer7, status: 0)
-    @invoice_item7 = create(:invoice_item, invoice: @invoice7, item: @item3, quantity: 1, unit_price: @item3.unit_price, status:01)
+    @invoice_item7 = create(:invoice_item, invoice: @invoice7, item: @item3, quantity: 1, unit_price: @item3.unit_price, status: 0)
     create(:transaction, invoice: @invoice7, result: 'success')
 
     #for false positives
@@ -105,6 +105,11 @@ RSpec.describe "the merchant dashboard page" do
       expect(page).to have_content("#{@item2.name} - Invoice ##{@invoice2.id} - #{@invoice2.created_at.strftime("%A, %B %d, %Y")}")
       expect(page).to have_content("#{@item3.name} - Invoice ##{@invoice3.id} - #{@invoice3.created_at.strftime("%A, %B %d, %Y")}")
       expect(page).to have_content("#{@item4.name} - Invoice ##{@invoice4.id} - #{@invoice4.created_at.strftime("%A, %B %d, %Y")}")
+
+      expect(page).to_not have_content(@item6.name)
+      expect(page).to_not have_content(@item7.name)
+      expect(page).to_not have_content("Invoice ##{@invoice6.id}")
+      expect(page).to_not have_content("Invoice ##{@invoice7.id}")
       
       expect(page).to have_link("#{@invoice1.id}", href: "/merchants/#{@merchant.id}/invoices/#{@invoice1.id}")
       expect(page).to have_link("#{@invoice2.id}", href: "/merchants/#{@merchant.id}/invoices/#{@invoice2.id}")
@@ -124,11 +129,11 @@ RSpec.describe "the merchant dashboard page" do
     @invoice1.save
     @invoice2.created_at = "2022-02-22 00:00:00"
     @invoice2.save
-    @invoice3.created_at = "2022-03-22 00:00:00"
+    @invoice3.created_at = "2021-03-22 00:00:00"
     @invoice3.save
     @invoice4.created_at = "2022-04-22 00:00:00"
     @invoice4.save
-    @invoice5.created_at = "2022-05-22 00:00:00"
+    @invoice5.created_at = "2021-05-22 00:00:00"
     @invoice5.save
     @invoice6.created_at = "2022-01-21 00:00:00"
     @invoice6.save
@@ -137,10 +142,10 @@ RSpec.describe "the merchant dashboard page" do
     visit "/merchants/#{@merchant.id}/dashboard"
 
     within "#items_ready_to_ship" do
-      expect("Invoice ##{@invoice6.id}").to appear_before("Invoice ##{@invoice1.id}", only_text: true)
-      expect("Invoice ##{@invoice1.id}").to appear_before("Invoice ##{@invoice7.id}", only_text: true)
-      expect("Invoice ##{@invoice2.id}").to appear_before("Invoice ##{@invoice3.id}", only_text: true)
-      expect("Invoice ##{@invoice4.id}").to appear_before("Invoice ##{@invoice5.id}", only_text: true)
+      expect("Invoice ##{@invoice3.id}").to appear_before("Invoice ##{@invoice1.id}", only_text: true)
+      expect("Invoice ##{@invoice5.id}").to appear_before("Invoice ##{@invoice1.id}", only_text: true)
+      expect("Invoice ##{@invoice1.id}").to appear_before("Invoice ##{@invoice4.id}", only_text: true)
+      expect("Invoice ##{@invoice2.id}").to appear_before("Invoice ##{@invoice4.id}", only_text: true)
     end
   end
 end
