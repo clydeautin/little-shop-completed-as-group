@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe "the admin merchants index" do
   before(:each) do
-    @merchant = create(:merchant)
+    @merchant = create(:merchant, status: 0)
 
     @customer1 = create(:customer)
     @customer2 = create(:customer)
@@ -49,7 +49,7 @@ RSpec.describe "the admin merchants index" do
     create(:transaction, invoice: @invoice7, result: 'success')
 
     #for false positives
-    @merchant2 = create(:merchant)
+    @merchant2 = create(:merchant, status: 1)
     @item8 = create(:item, merchant: @merchant2, unit_price: 7000)
   
     @invoice8 = create(:invoice, customer: @customer7, status: 1)
@@ -69,5 +69,72 @@ RSpec.describe "the admin merchants index" do
 
     expect(page).to have_link(@merchant.name)
     expect(page).to have_link(@merchant2.name)
+  end
+
+  it "I can disable or enable an item with a button next to the item" do
+    visit admin_merchants_path
+
+    within "#merchant-#{@merchant.id}" do
+      if @merchant.status == "enabled"
+        expect(page).to have_content(@merchant.name)
+        expect(page).to have_button("Disable")
+      elsif @merchant.status == "disabled"
+        expect(page).to have_content(@merchant.name)
+        expect(page).to have_button("Enable")
+      end
+    end
+
+    within "#merchant-#{@merchant2.id}" do
+      if @merchant2.status == "enabled"
+        expect(page).to have_content(@merchant2.name)
+        expect(page).to have_button("Disable")
+      elsif @merchant2.status == "disabled"
+        expect(page).to have_content(@merchant2.name)
+        expect(page).to have_button("Enable")
+      end
+    end
+
+    within "#merchant-#{@merchant.id}" do
+      expect(page).to have_button("Disable")
+      expect(page).to_not have_button("Enable")
+
+      click_button "Disable"
+
+      expect(page).to have_current_path(admin_merchants_path)
+      expect(page).to have_button("Enable")
+      expect(page).to_not have_button("Disable")
+    end
+  end
+
+  xit "groups merchants by enabled and disabled" do
+    visit admin_merchants_path
+
+    expect("Enabled Items").to appear_before("Disabled Items")
+
+    within "#enabled_items" do
+      expect(page).to have_button("Disable")
+      expect(page).to_not have_button("Enable")
+
+      expect(page).to have_content(@item1.name)
+      expect(page).to_not have_content(@item5.name)
+    end
+
+    within "#disabled_items" do
+      expect(page).to have_button("Enable")
+      expect(page).to_not have_button("Disable")
+
+      expect(page).to have_content(@item5.name)
+      expect(page).to_not have_content(@item1.name)
+    end
+  end
+
+  xit "has a link to create new merchant" do
+    visit admin_merchants_path
+
+    expect(page).to have_link("Create New Merchant")
+
+    click_link("Create New Merchant")
+
+    expect(current_path).to eq(new_merchant_item_path(merchant_id: @merchant))
   end
 end
