@@ -137,6 +137,7 @@ RSpec.describe "the merchant item index page" do
     expect(current_path).to eq(new_merchant_item_path(merchant_id: @merchant))
   end
 
+  #US12
   it "can create a list of top 5 items" do
     @invoice9 = create(:invoice, customer: @customer7, status: 0)
     @invoice_item9 = create(:invoice_item, invoice: @invoice9, item: @item5, quantity: 1, unit_price: @item5.unit_price, status: 0)
@@ -155,6 +156,15 @@ RSpec.describe "the merchant item index page" do
       expect(@item4.name).to appear_before("Total Revenue Generated: $200.00")
       expect("Total Revenue Generated: $200.00").to appear_before(@item3.name)
       expect(@item3.name).to appear_before("Total Revenue Generated: $150.00")
+    end
+  end
+
+  #US13
+  it "displays biggest day for most popular items" do
+    visit merchant_items_path(@merchant)
+
+    within "#top_five" do
+      expect(page).to have_content("Top selling date for #{@item4.name} was #{@invoice4.created_at.strftime("%A, %B %d, %Y")}")
     end
   end
 
