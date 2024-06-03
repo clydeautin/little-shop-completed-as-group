@@ -101,4 +101,36 @@ RSpec.describe "the merchant item index page" do
       expect(page).to_not have_button("Disable")
     end
   end
+  
+  #US10
+  it "groups items by enabled and disabled" do
+    visit "/merchants/#{@merchant.id}/items"
+
+    expect("Enabled Items").to appear_before("Disabled Items")
+
+    @merchant.items.each do |item|
+      if item.status == "enabled"
+        expect("Enabled Items").to appear_before(item.name)
+        expect(item.name).to appear_before("Disabled Items")
+      elsif item.status == "disabled"
+        expect("Disabled Items").to appear_before(item.name)
+      end
+    end
+
+    within "#enabled_items" do
+      expect(page).to have_button("Disable")
+      expect(page).to_not have_button("Enable")
+
+      expect(page).to have_content(@item1.name)
+      expect(page).to_not have_content(@item5.name)
+    end
+
+    within "#disabled_items" do
+      expect(page).to have_button("Enable")
+      expect(page).to_not have_button("Disable")
+
+      expect(page).to have_content(@item5.name)
+      expect(page).to_not have_content(@item1.name)
+    end
+  end
 end

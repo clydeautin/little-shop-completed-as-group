@@ -1,15 +1,21 @@
-<h1>Items Index for this Merchant</h1>
+<h1>Items Index</h1>
 <div id="merchant_items">
-  <% @items.each do |item| %>
+<h3>Enabled Items</h3>
+<div id="enabled_items">
+  <% @enabled_items.each do |item| %>
     <div id="item-<%= item.id %>">
-      <div>
         <%= "Item Name: #{item.name}" %>
-        <% if item.status == "enabled"%>
-          <%= button_to "Disable", "/merchants/#{@merchant.id}/items/#{item.id}?status=disabled", method: :patch, data: { turbo: true }, local: true %>
-        <% elsif item.status == "disabled"%>
-          <%= button_to "Enable", "/merchants/#{@merchant.id}/items/#{item.id}?status=enabled", method: :patch, data: { turbo: true }, local: true %>
-        <% end %><br>
-      </div>
+        <%= button_to "Disable", "/merchants/#{@merchant.id}/items/#{item.id}?status=disabled", method: :patch, data: { turbo: true }, local: true %>
     </div>
   <% end %>
+</div>
+<div id="disabled_items">
+<h3>Disabled Items</h3>
+  <% @disabled_items.each do |item| %>
+    <div id="item-<%= item.id %>">
+        <%= "Item Name: #{item.name}" %>
+        <%= button_to "Enable", "/merchants/#{@merchant.id}/items/#{item.id}?status=enabled", method: :patch, data: { turbo: true }, local: true %>
+    </div>
+  <% end %>
+</div>
 </div>

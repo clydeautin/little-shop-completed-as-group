@@ -34,4 +34,12 @@ class Merchant < ApplicationRecord
       .order(:invoice_date)
       .distinct
   end
+
+  def enabled_items
+    items.where("items.status = 0")
+  end
+
+  def disabled_items
+    items.where("items.status = 1")
+  end
 end
