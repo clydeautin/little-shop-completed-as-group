@@ -106,25 +106,25 @@ RSpec.describe "the admin merchants index" do
     end
   end
 
-  xit "groups merchants by enabled and disabled" do
+  it "groups merchants by enabled and disabled" do
     visit admin_merchants_path
 
-    expect("Enabled Items").to appear_before("Disabled Items")
+    expect("Enabled Merchants").to appear_before("Disabled Merchants")
 
-    within "#enabled_items" do
+    within "#enabled_merchants" do
       expect(page).to have_button("Disable")
       expect(page).to_not have_button("Enable")
 
-      expect(page).to have_content(@item1.name)
-      expect(page).to_not have_content(@item5.name)
+      expect(page).to have_content(@merchant.name)
+      expect(page).to_not have_content(@merchant2.name)
     end
 
-    within "#disabled_items" do
+    within "#disabled_merchants" do
       expect(page).to have_button("Enable")
       expect(page).to_not have_button("Disable")
 
-      expect(page).to have_content(@item5.name)
-      expect(page).to_not have_content(@item1.name)
+      expect(page).to have_content(@merchant2.name)
+      expect(page).to_not have_content(@merchant.name)
     end
   end
 
