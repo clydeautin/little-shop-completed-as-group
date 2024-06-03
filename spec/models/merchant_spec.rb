@@ -98,6 +98,16 @@ RSpec.describe Merchant do
         expect(@merchant.disabled_items).to eq([@item5, @item6, @item7])
       end
     end
+
+    describe "top five items" do
+      it "can create a list of top 5 items" do
+        @invoice9 = create(:invoice, customer: @customer7, status: 0)
+        @invoice_item9 = create(:invoice_item, invoice: @invoice9, item: @item5, quantity: 1, unit_price: @item5.unit_price, status: 0)
+        create(:transaction, invoice: @invoice9, result: 'success')
+
+        expect(@merchant.top_five_items).to eq([@item4, @item3, @item1, @item2, @item5])
+      end
+    end
   end
 
   describe "class methods" do

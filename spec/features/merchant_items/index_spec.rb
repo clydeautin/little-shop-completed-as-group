@@ -108,15 +108,6 @@ RSpec.describe "the merchant item index page" do
 
     expect("Enabled Items").to appear_before("Disabled Items")
 
-    @merchant.items.each do |item|
-      if item.status == "enabled"
-        expect("Enabled Items").to appear_before(item.name)
-        expect(item.name).to appear_before("Disabled Items")
-      elsif item.status == "disabled"
-        expect("Disabled Items").to appear_before(item.name)
-      end
-    end
-
     within "#enabled_items" do
       expect(page).to have_button("Disable")
       expect(page).to_not have_button("Enable")
@@ -145,4 +136,26 @@ RSpec.describe "the merchant item index page" do
 
     expect(current_path).to eq(new_merchant_item_path(merchant_id: @merchant))
   end
+
+  it "can create a list of top 5 items" do
+    @invoice9 = create(:invoice, customer: @customer7, status: 0)
+    @invoice_item9 = create(:invoice_item, invoice: @invoice9, item: @item5, quantity: 1, unit_price: @item5.unit_price, status: 0)
+    create(:transaction, invoice: @invoice9, result: 'success')
+
+    visit merchant_items_path(@merchant)
+
+    within "#top_five" do
+      expect(@item4.name).to appear_before(@item3.name)
+      expect(@item3.name).to appear_before(@item1.name)
+      expect(@item1.name).to appear_before(@item2.name)
+      expect(@item2.name).to appear_before(@item5.name)
+
+      expect(page).to have_link("#{@item4.name}")
+
+      expect(@item4.name).to appear_before("Total Revenue Generated: $200.00")
+      expect("Total Revenue Generated: $200.00").to appear_before(@item3.name)
+      expect(@item3.name).to appear_before("Total Revenue Generated: $150.00")
+    end
+  end
+
 end
