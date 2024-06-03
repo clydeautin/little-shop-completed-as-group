@@ -1,6 +1,4 @@
-require "rails_helper"
-
-RSpec.describe "the admin merchant show page" do
+RSpec.describe "admin merchant edit" do
   before(:each) do
     @merchant = create(:merchant)
 
@@ -41,14 +39,13 @@ RSpec.describe "the admin merchant show page" do
     3.times { create(:transaction, invoice: @invoice5, result: 'success') }
 
     @invoice6 = create(:invoice, customer: @customer6, status: 0)
-    @invoice_item6 = create(:invoice_item, invoice: @invoice6, item: @item2, quantity: 1, unit_price: @item2.unit_price, status: 0)
+    @invoice_item6 = create(:invoice_item, invoice: @invoice6, item: @item2, quantity: 1, unit_price: @item2.unit_price, status:01)
     create(:transaction, invoice: @invoice6, result: 'success')
 
     @invoice7 = create(:invoice, customer: @customer7, status: 0)
-    @invoice_item7 = create(:invoice_item, invoice: @invoice7, item: @item3, quantity: 1, unit_price: @item3.unit_price, status: 0)
+    @invoice_item7 = create(:invoice_item, invoice: @invoice7, item: @item3, quantity: 1, unit_price: @item3.unit_price, status:01)
     create(:transaction, invoice: @invoice7, result: 'success')
 
-    #for false positives
     @merchant2 = create(:merchant)
     @item8 = create(:item, merchant: @merchant2, unit_price: 7000)
   
@@ -57,16 +54,38 @@ RSpec.describe "the admin merchant show page" do
     8.times { create(:transaction, invoice: @invoice8, result: 'success') }
   end
 
-  it "should have the merchant name" do
+  it "I see a form filled in with the existing item attribute information
+    When I update the information in the form and I click ‘submit’
+    Then I am redirected back to the item show page where I see the updated information
+    And I see a flash message stating that the information has been successfully updated." do
+      
     visit admin_merchant_path(@merchant)
+      
     expect(page).to have_content(@merchant.name)
 
-    visit admin_merchant_path(@merchant2)
-    expect(page).to have_content(@merchant2.name)
+    click_on "Update Merchant"
+    
+    within "#update_merchant" do
+      fill_in "Name", with: "New Name" 
+    end
+
+    click_button "Update"
+
+    expect(page).to have_current_path(admin_merchant_path(@merchant))
+    
+    expect(page).to have_content("New Name")
   end
 
-  it "has a link to update the merchant" do
-    visit admin_merchant_path(@merchant)
-    expect(page).to have_link("Update Merchant")
+  it "cannot edit an merchant name to be blank" do
+    visit edit_admin_merchant_path(@merchant)
+    
+    within "#update_merchant" do
+      fill_in "Name", with: "" 
+    end
+
+    click_button "Update"
+
+    expect(page).to have_button("Update")
+    expect(page).to have_content("Name can't be blank")
   end
 end

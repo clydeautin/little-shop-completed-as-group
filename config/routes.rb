@@ -26,6 +26,6 @@ namespace :admin do
   resources :merchants, only: [:index, :show, :edit]
 end
 
-patch "/admin/merchants/:id", to: "admin/merchants#update"
+patch "/admin/merchants/:id", to: "admin/merchants#update", as: "admin_merchant_update"
 
 end

@@ -1,7 +1,7 @@
 <h1>Edit Merchant</h1>
 <div id="update_merchant">
 <%= render partial: 'merchant_form', locals: {
-                                      url: admin_merchant_path(@merchant),
+                                      url: admin_merchant_update_path(@merchant),
                                       method: :patch,
                                       button_text: 'Update' 
 																	 } %>
