@@ -1,21 +1,7 @@
 require "rails_helper"
 
-RSpec.describe Item do
-  describe "validations" do
-    it {should validate_presence_of :name}
-    it {should validate_presence_of :description}
-    it {should validate_presence_of :unit_price}
-    it {should validate_presence_of :status}
-  end
-  
-  describe "relationships" do
-    it {should belong_to :merchant}
-    it {should have_many :invoice_items}
-    it {should have_many(:invoices).through(:invoice_items)}
-    it {should have_many(:transactions).through(:invoice_items)}
-  end
-
-  before :each do
+RSpec.describe "the admin merchant show page" do
+  before(:each) do
     @merchant = create(:merchant)
 
     @customer1 = create(:customer)
@@ -26,13 +12,13 @@ RSpec.describe Item do
     @customer6 = create(:customer)
     @customer7 = create(:customer)
 
-    @item1 = create(:item, merchant: @merchant, unit_price: 1000, status: 0)
-    @item2 = create(:item, merchant: @merchant, unit_price: 2000, status: 0)
-    @item3 = create(:item, merchant: @merchant, unit_price: 3000, status: 0)
-    @item4 = create(:item, merchant: @merchant, unit_price: 4000, status: 0)
-    @item5 = create(:item, merchant: @merchant, unit_price: 5000, status: 1)
-    @item6 = create(:item, merchant: @merchant, unit_price: 6000, status: 1)
-    @item7 = create(:item, merchant: @merchant, unit_price: 7000, status: 1)
+    @item1 = create(:item, merchant: @merchant, unit_price: 1000)
+    @item2 = create(:item, merchant: @merchant, unit_price: 2000)
+    @item3 = create(:item, merchant: @merchant, unit_price: 3000)
+    @item4 = create(:item, merchant: @merchant, unit_price: 4000)
+    @item5 = create(:item, merchant: @merchant, unit_price: 5000)
+    @item6 = create(:item, merchant: @merchant, unit_price: 6000)
+    @item7 = create(:item, merchant: @merchant, unit_price: 7000)
 
     @invoice1 = create(:invoice, customer: @customer1, status: 1)
     @invoice_item1 = create(:invoice_item, invoice: @invoice1, item: @item1, quantity: 1, unit_price: @item1.unit_price, status: 1)
@@ -62,7 +48,7 @@ RSpec.describe Item do
     @invoice_item7 = create(:invoice_item, invoice: @invoice7, item: @item3, quantity: 1, unit_price: @item3.unit_price, status: 0)
     create(:transaction, invoice: @invoice7, result: 'success')
 
-    # second setup for false positives
+    #for false positives
     @merchant2 = create(:merchant)
     @item8 = create(:item, merchant: @merchant2, unit_price: 7000)
   
@@ -71,9 +57,16 @@ RSpec.describe Item do
     8.times { create(:transaction, invoice: @invoice8, result: 'success') }
   end
 
-  describe "#best_day" do
-    it "should be able to return the best day for an item" do
-      expect(@item1.best_day).to eq(@invoice1.created_at)
-    end
+  it "should have the merchant name" do
+    visit admin_merchant_path(@merchant)
+    expect(page).to have_content(@merchant.name)
+
+    visit admin_merchant_path(@merchant2)
+    expect(page).to have_content(@merchant2.name)
+  end
+
+  it "has a link to update the merchant" do
+    visit admin_merchant_path(@merchant)
+    expect(page).to have_link("Update Merchant")
   end
 end

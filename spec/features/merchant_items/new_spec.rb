@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "the merchant item index page" do
+RSpec.describe "the merchant item new page" do
   before(:each) do
     @merchant = create(:merchant)
 
@@ -56,7 +56,7 @@ RSpec.describe "the merchant item index page" do
     8.times { create(:transaction, invoice: @invoice8, result: 'success') }
   end
 
-  it "has a form to create a new artist" do
+  it "has a form to create a new item" do
     visit new_merchant_item_path(merchant_id: @merchant)
 
     within "#new_item" do

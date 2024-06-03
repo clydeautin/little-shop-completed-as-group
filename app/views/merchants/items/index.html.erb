@@ -6,7 +6,7 @@
   <%= link_to "#{item.name}", merchant_item_path(merchant_id: item.merchant, id: item) %>
   <%= "Total Revenue Generated: $#{"%.2f" % (item.total_revenue.to_f / 100)}" %>
   <br>
-  <%= "Top selling date for #{item.name} was #{item.best_day}" %>
+  <%= "Top selling date for #{item.name} was #{item.best_day.strftime("%A, %B %d, %Y")}" %>
   <br>
   <% end %>
 </div>

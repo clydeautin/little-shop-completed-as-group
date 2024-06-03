@@ -24,6 +24,5 @@ class Item < ApplicationRecord
       .order('sum(invoice_items.quantity) desc')
       .limit(1)
       .pluck('invoices.created_at')[0]
-      .strftime("%A, %B %d, %Y")
   end
 end
