@@ -89,4 +89,20 @@ RSpec.describe "the merchant item index page" do
 # need to test for sad path/edge cases
     end
   end
+
+  it "cannot edit an item name to be blank" do
+    visit "/merchants/#{@merchant.id}/items/#{@item1.id}/edit"
+
+    within "#update_attr" do
+      fill_in "name", with: "" 
+      fill_in "description", with: "" 
+      fill_in "price", with: ""
+    end
+
+    click_button "Update"
+
+    expect(page).to have_button("Update")
+    expect(page).to have_content("Name can't be blank")
+    expect(page).to have_content("Description can't be blank")
+  end
 end

@@ -96,6 +96,7 @@ RSpec.describe "the merchant item index page" do
 
       click_button "Disable"
 
+      expect(page).to have_current_path("/merchants/#{@merchant.id}/items")
       expect(page).to have_button("Enable")
       expect(page).to_not have_button("Disable")
     end
