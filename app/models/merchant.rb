@@ -7,6 +7,14 @@ class Merchant < ApplicationRecord
   has_many :transactions, through: :items
   has_many :customers, through: :invoices
 
+  def self.top_five_customers
+    Customer.joins(:transactions)
+      .where(transactions: {result: 'success'})
+      .group('customers.id')
+      .order('count(transactions.id) desc')
+      .limit(5)
+  end
+
   def top_five_customers
     @transaction_ids = transactions.pluck(:id)
 

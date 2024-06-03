@@ -1,6 +1,18 @@
 require "rails_helper"
 
-RSpec.describe "the merchant item index page" do
+RSpec.describe Invoice do
+  describe "validations" do
+    it {should validate_presence_of :status}
+  end
+
+  describe "relationships" do
+    it {should belong_to :customer}
+    it {should have_many :transactions}
+    it {should have_many :invoice_items}
+    it {should have_many(:items).through(:invoice_items)}
+    it {should have_many(:merchants).through(:items)}
+  end
+
   before(:each) do
     @merchant = create(:merchant)
 
@@ -29,25 +41,26 @@ RSpec.describe "the merchant item index page" do
     2.times { create(:transaction, invoice: @invoice2, result: 'success') }
 
     @invoice3 = create(:invoice, customer: @customer3, status: 1)
-    @invoice_item3 = create(:invoice_item, invoice: @invoice3, item: @item3, quantity: 1, unit_price: @item3.unit_price, status: 1)
+    @invoice_item3 = create(:invoice_item, invoice: @invoice3, item: @item3, quantity: 1, unit_price: @item3.unit_price, status: 2)
     4.times { create(:transaction, invoice: @invoice3, result: 'success') }
 
     @invoice4 = create(:invoice, customer: @customer4, status: 1)
-    @invoice_item4 = create(:invoice_item, invoice: @invoice4, item: @item4, quantity: 1, unit_price: @item4.unit_price, status: 1)
+    @invoice_item4 = create(:invoice_item, invoice: @invoice4, item: @item4, quantity: 1, unit_price: @item4.unit_price, status: 2)
     5.times { create(:transaction, invoice: @invoice4, result: 'success') }
 
     @invoice5 = create(:invoice, customer: @customer5, status: 1)
-    @invoice_item5 = create(:invoice_item, invoice: @invoice5, item: @item1, quantity: 1, unit_price: @item1.unit_price, status: 1)
+    @invoice_item5 = create(:invoice_item, invoice: @invoice5, item: @item1, quantity: 1, unit_price: @item1.unit_price, status: 2)
     3.times { create(:transaction, invoice: @invoice5, result: 'success') }
 
     @invoice6 = create(:invoice, customer: @customer6, status: 0)
-    @invoice_item6 = create(:invoice_item, invoice: @invoice6, item: @item2, quantity: 1, unit_price: @item2.unit_price, status:01)
+    @invoice_item6 = create(:invoice_item, invoice: @invoice6, item: @item2, quantity: 1, unit_price: @item2.unit_price, status: 2)
     create(:transaction, invoice: @invoice6, result: 'success')
 
     @invoice7 = create(:invoice, customer: @customer7, status: 0)
-    @invoice_item7 = create(:invoice_item, invoice: @invoice7, item: @item3, quantity: 1, unit_price: @item3.unit_price, status:01)
+    @invoice_item7 = create(:invoice_item, invoice: @invoice7, item: @item3, quantity: 1, unit_price: @item3.unit_price, status: 0)
     create(:transaction, invoice: @invoice7, result: 'success')
 
+    #for false positives
     @merchant2 = create(:merchant)
     @item8 = create(:item, merchant: @merchant2, unit_price: 7000)
   
@@ -56,37 +69,12 @@ RSpec.describe "the merchant item index page" do
     8.times { create(:transaction, invoice: @invoice8, result: 'success') }
   end
 
-  # us8.part2
-  it "I see a form filled in with the existing item attribute information
-    When I update the information in the form and I click ‘submit’
-    Then I am redirected back to the item show page where I see the updated information
-    And I see a flash message stating that the information has been successfully updated." do
-      
-    visit "/merchants/#{@merchant.id}/items/#{@item1.id}"
-      
-    within "#items_attr" do
-      expect(page).to have_content(@item1.name)
-      expect(page).to have_content("Description: #{@item1.description}")
-      expect(page).to have_content("Current Price: #{@item1.unit_price}")
-    end
+  describe "instance methods" do
+    describe "#incomplete" do
+      it "returns invoices that have items not shipped" do
 
-    click_on "Update Item"
-    
-    within "#update_attr" do
-      fill_in "name", with: "I HAVE" 
-      fill_in "description", with: "Power level OVER" 
-      fill_in "price", with: 9000
-    end
-
-    click_button "Update"
-
-    expect(page).to have_current_path("/merchants/#{@merchant.id}/items/#{@item1.id}")
-    
-    within "#items_attr" do
-      expect(page).to have_content("I HAVE")
-      expect(page).to have_content("Description: Power level OVER")
-      expect(page).to have_content("Current Price: 9000")
-# need to test for sad path/edge cases
+        expect(Invoice.incomplete).to eq([@invoice1, @invoice2, @invoice7, @invoice8])
+      end
     end
   end
 end

@@ -12,13 +12,13 @@ RSpec.describe "the merchant item index page" do
     @customer6 = create(:customer)
     @customer7 = create(:customer)
 
-    @item1 = create(:item, merchant: @merchant, unit_price: 1000)
-    @item2 = create(:item, merchant: @merchant, unit_price: 2000)
-    @item3 = create(:item, merchant: @merchant, unit_price: 3000)
-    @item4 = create(:item, merchant: @merchant, unit_price: 4000)
-    @item5 = create(:item, merchant: @merchant, unit_price: 5000)
-    @item6 = create(:item, merchant: @merchant, unit_price: 6000)
-    @item7 = create(:item, merchant: @merchant, unit_price: 7000)
+    @item1 = create(:item, merchant: @merchant, unit_price: 1000, status: 0)
+    @item2 = create(:item, merchant: @merchant, unit_price: 2000, status: 0)
+    @item3 = create(:item, merchant: @merchant, unit_price: 3000, status: 0)
+    @item4 = create(:item, merchant: @merchant, unit_price: 4000, status: 0)
+    @item5 = create(:item, merchant: @merchant, unit_price: 5000, status: 1)
+    @item6 = create(:item, merchant: @merchant, unit_price: 6000, status: 1)
+    @item7 = create(:item, merchant: @merchant, unit_price: 7000, status: 1)
 
     @invoice1 = create(:invoice, customer: @customer1, status: 1)
     @invoice_item1 = create(:invoice_item, invoice: @invoice1, item: @item1, quantity: 1, unit_price: @item1.unit_price, status: 1)
@@ -48,6 +48,7 @@ RSpec.describe "the merchant item index page" do
     @invoice_item7 = create(:invoice_item, invoice: @invoice7, item: @item3, quantity: 1, unit_price: @item3.unit_price, status:01)
     create(:transaction, invoice: @invoice7, result: 'success')
 
+    #for false positives
     @merchant2 = create(:merchant)
     @item8 = create(:item, merchant: @merchant2, unit_price: 7000)
   
@@ -56,21 +57,47 @@ RSpec.describe "the merchant item index page" do
     8.times { create(:transaction, invoice: @invoice8, result: 'success') }
   end
 
-  # us7
-  it "I see all of the item's attributes including: Name, Description, Current Selling Price" do
-    visit "/merchants/#{@merchant.id}/items/#{@item1.id}"
+  # us6
+  it "I see a list of the names of all of my items and I do not see items for any other merchant" do
+    visit "/merchants/#{@merchant.id}/items"
 
-    within "#items_attr" do
-      expect(page).to have_content(@item1.name)
-      expect(page).to have_content("Description: #{@item1.description}")
-      expect(page).to have_content("Current Price: #{@item1.unit_price}")
+    within "#merchant_items" do
+      @merchant.items.each do |item|
+        expect(page).to have_content(item.name)
+      end
+    end
+
+    within "#merchant_items" do
+      @merchant2.items.each do |item|
+        expect(page).to_not have_content(item.name)
+      end
     end
   end
 
-  # us8.part1
-  it "has a link to update item info" do
-    visit "/merchants/#{@merchant.id}/items/#{@item1.id}"
+  #us9
+  it "I can disable or enable an item with a button next to the item" do
+    visit "/merchants/#{@merchant.id}/items"
 
-    expect(page).to have_link("Update Item")
+    @merchant.items.each do |item|
+      within "#item-#{item.id}" do
+        if item.status == "enabled"
+          expect(page).to have_content(item.name)
+          expect(page).to have_button("Disable")
+        elsif item.status == "disabled"
+          expect(page).to have_content(item.name)
+          expect(page).to have_button("Enable")
+        end
+      end
+    end
+
+    within "#item-#{@item1.id}" do
+      expect(page).to have_button("Disable")
+      expect(page).to_not have_button("Enable")
+
+      click_button "Disable"
+
+      expect(page).to have_button("Enable")
+      expect(page).to_not have_button("Disable")
+    end
   end
 end

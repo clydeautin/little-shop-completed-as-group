@@ -12,9 +12,12 @@ class Merchants::ItemsController < ApplicationController
   def update
     @item = Item.find(params[:item_id])
     @merchant = Merchant.find(params[:merchant_id])
-    
+    # pry
 
-    if @item.update(item_params)
+    if params[:status].present? && @item.update({status: params[:status]})
+      # pry
+      redirect_to "/merchants/#{@merchant.id}/items"
+    elsif @item.update(item_params)
       redirect_to "/merchants/#{@merchant.id}/items/#{@item.id}"
     else
       redirect_to "/merchants/#{@merchant.id}/items/#{@item.id}/edit"
@@ -25,6 +28,6 @@ class Merchants::ItemsController < ApplicationController
   private
 
   def item_params
-    params.permit(:id, :name, :description, :unit_price, :merchant_id)
+    params.permit(:id, :name, :description, :unit_price, :merchant_id, :status)
   end
 end

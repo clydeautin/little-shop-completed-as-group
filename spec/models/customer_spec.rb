@@ -73,5 +73,19 @@ RSpec.describe Customer, type: :model do
         expect(@customer2.successful_transactions_with_merchant(@merchant)).to eq(2)
       end
     end
+
+    describe "#successful_transactions" do
+      it "can return count of successful transactions" do
+        @merchant2 = create(:merchant)
+        @item8 = create(:item, merchant: @merchant2, unit_price: 7000)
+
+        @invoice8 = create(:invoice, customer: @customer1, status: 1)
+        @invoice_item8 = create(:invoice_item, invoice: @invoice8, item: @item8, quantity: 1, unit_price: @item1.unit_price)
+        8.times { create(:transaction, invoice: @invoice8, result: 'success') }
+
+        expect(@customer1.successful_transactions).to eq(14)
+        expect(@customer2.successful_transactions).to eq(2)
+      end
+    end
   end
 end
