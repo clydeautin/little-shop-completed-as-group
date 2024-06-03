@@ -24,13 +24,13 @@ RSpec.describe Merchant do
     @customer6 = create(:customer)
     @customer7 = create(:customer)
 
-    @item1 = create(:item, merchant: @merchant, unit_price: 1000)
-    @item2 = create(:item, merchant: @merchant, unit_price: 2000)
-    @item3 = create(:item, merchant: @merchant, unit_price: 3000)
-    @item4 = create(:item, merchant: @merchant, unit_price: 4000)
-    @item5 = create(:item, merchant: @merchant, unit_price: 5000)
-    @item6 = create(:item, merchant: @merchant, unit_price: 6000)
-    @item7 = create(:item, merchant: @merchant, unit_price: 7000)
+    @item1 = create(:item, merchant: @merchant, unit_price: 1000, status: 0)
+    @item2 = create(:item, merchant: @merchant, unit_price: 2000, status: 0)
+    @item3 = create(:item, merchant: @merchant, unit_price: 3000, status: 0)
+    @item4 = create(:item, merchant: @merchant, unit_price: 4000, status: 0)
+    @item5 = create(:item, merchant: @merchant, unit_price: 5000, status: 1)
+    @item6 = create(:item, merchant: @merchant, unit_price: 6000, status: 1)
+    @item7 = create(:item, merchant: @merchant, unit_price: 7000, status: 1)
 
     @invoice1 = create(:invoice, customer: @customer1, status: 1)
     @invoice_item1 = create(:invoice_item, invoice: @invoice1, item: @item1, quantity: 1, unit_price: @item1.unit_price, status: 1)
@@ -88,13 +88,33 @@ RSpec.describe Merchant do
         expect(@merchant.items_ready_to_ship).to eq([@item1, @item2, @item3, @item4, @item1])
       end
     end
+
+    describe "enabled/disabled items" do
+      it "can create list of enabled items" do
+        expect(@merchant.enabled_items).to eq([@item1, @item2, @item3, @item4])
+      end
+
+      it "can create list of all disabled items" do
+        expect(@merchant.disabled_items).to eq([@item5, @item6, @item7])
+      end
+    end
+
+    describe "top five items" do
+      it "can create a list of top 5 items" do
+        @invoice9 = create(:invoice, customer: @customer7, status: 0)
+        @invoice_item9 = create(:invoice_item, invoice: @invoice9, item: @item5, quantity: 1, unit_price: @item5.unit_price, status: 0)
+        create(:transaction, invoice: @invoice9, result: 'success')
+
+        expect(@merchant.top_five_items).to eq([@item4, @item3, @item1, @item2, @item5])
+      end
+    end
   end
 
   describe "class methods" do
     describe "top_five_customers" do
       it "can return top 5 of all customers by successful transactions" do
 
-        expect(Merchant.top_five_customers).to eq([@customer7, @customer1, @customer4, @customer3, @customer5, ])
+        expect(Merchant.top_five_customers).to eq([@customer7, @customer1, @customer4, @customer3, @customer5])
         end
     end
   end

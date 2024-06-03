@@ -101,4 +101,71 @@ RSpec.describe "the merchant item index page" do
       expect(page).to_not have_button("Disable")
     end
   end
+  
+  #US10
+  it "groups items by enabled and disabled" do
+    visit "/merchants/#{@merchant.id}/items"
+
+    expect("Enabled Items").to appear_before("Disabled Items")
+
+    within "#enabled_items" do
+      expect(page).to have_button("Disable")
+      expect(page).to_not have_button("Enable")
+
+      expect(page).to have_content(@item1.name)
+      expect(page).to_not have_content(@item5.name)
+    end
+
+    within "#disabled_items" do
+      expect(page).to have_button("Enable")
+      expect(page).to_not have_button("Disable")
+
+      expect(page).to have_content(@item5.name)
+      expect(page).to_not have_content(@item1.name)
+    end
+  end
+
+  #US11
+
+  it "has a link to create new item" do
+    visit merchant_items_path(@merchant)
+
+    expect(page).to have_link("Create New Item")
+
+    click_link("Create New Item")
+
+    expect(current_path).to eq(new_merchant_item_path(merchant_id: @merchant))
+  end
+
+  #US12
+  it "can create a list of top 5 items" do
+    @invoice9 = create(:invoice, customer: @customer7, status: 0)
+    @invoice_item9 = create(:invoice_item, invoice: @invoice9, item: @item5, quantity: 1, unit_price: @item5.unit_price, status: 0)
+    create(:transaction, invoice: @invoice9, result: 'success')
+
+    visit merchant_items_path(@merchant)
+
+    within "#top_five" do
+      expect(@item4.name).to appear_before(@item3.name)
+      expect(@item3.name).to appear_before(@item1.name)
+      expect(@item1.name).to appear_before(@item2.name)
+      expect(@item2.name).to appear_before(@item5.name)
+
+      expect(page).to have_link("#{@item4.name}")
+
+      expect(@item4.name).to appear_before("Total Revenue Generated: $200.00")
+      expect("Total Revenue Generated: $200.00").to appear_before(@item3.name)
+      expect(@item3.name).to appear_before("Total Revenue Generated: $150.00")
+    end
+  end
+
+  #US13
+  it "displays biggest day for most popular items" do
+    visit merchant_items_path(@merchant)
+
+    within "#top_five" do
+      expect(page).to have_content("Top selling date for #{@item4.name} was #{@invoice4.created_at.strftime("%A, %B %d, %Y")}")
+    end
+  end
+
 end

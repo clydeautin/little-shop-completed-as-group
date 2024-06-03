@@ -2,6 +2,9 @@ class Merchants::ItemsController < ApplicationController
   def index
     @merchant = Merchant.find(params[:merchant_id])
     @items = @merchant.items
+    @enabled_items = @merchant.enabled_items
+    @disabled_items = @merchant.disabled_items
+    @top_five_items = @merchant.top_five_items
   end
 
   def show
@@ -22,6 +25,21 @@ class Merchants::ItemsController < ApplicationController
     else
       redirect_to "/merchants/#{@merchant.id}/items/#{@item.id}/edit"
       flash[:alert] = "Error: #{error_message(@item.errors)}"
+    end
+  end
+
+  def new
+  end
+
+  def create
+    params[:status] = 1
+    item = Item.new(item_params)
+    
+    if item.save
+      redirect_to merchant_items_path
+    else
+      flash[:alert] = "Error: #{error_message(item.errors)}"
+      render :new
     end
   end
 

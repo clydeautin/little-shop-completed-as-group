@@ -34,4 +34,21 @@ class Merchant < ApplicationRecord
       .order(:invoice_date)
       .distinct
   end
+
+  def enabled_items
+    items.where("items.status = 0")
+  end
+
+  def disabled_items
+    items.where("items.status = 1")
+  end
+
+  def top_five_items
+    items.joins(:transactions)
+     .where(transactions: { result: 'success' })
+     .select('items.*, sum(invoice_items.quantity * invoice_items.unit_price) as total_revenue')
+     .group(:id)
+     .order('total_revenue desc')
+     .limit(5)
+  end
 end
