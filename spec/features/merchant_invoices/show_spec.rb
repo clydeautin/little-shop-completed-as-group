@@ -161,7 +161,7 @@ RSpec.describe "the merchant dashboard page" do
       end
     end
 
-    @invoice_item1 = FactoryBot.create(:invoice_item, invoice: @invoice1, item: @item1, quantity: 1, unit_price: @item1.unit_price)
+    @invoice_item1 = FactoryBot.create(:invoice_item, invoice: @invoice1, item: @item1, quantity: 1, unit_price: @item1.unit_price, status: 0)
     @invoice_item2 = FactoryBot.create(:invoice_item, invoice: @invoice1, item: @item2, quantity: 2, unit_price: @item2.unit_price)
 
     @invoice_item3 = FactoryBot.create(:invoice_item, invoice: @invoice2, item: @item3, quantity: 2, unit_price: @item3.unit_price)
@@ -229,6 +229,17 @@ RSpec.describe "the merchant dashboard page" do
         visit merchant_invoice_path(@merchant1, @invoice1)
         expect(page).to have_content("Total Invoice Revenue: $350")
         save_and_open_page
+      end
+
+      it 'allows you to switch invoice item status' do
+        visit merchant_invoice_path(@merchant1, @invoice1)
+
+        within "#invoice-item#{@invoice_item1}" do
+          select 'shipped', from: 'Status'
+          click_button 'Update Item Status'
+        end
+
+        expect(page).to have_content('Invoice Item Status: shipped')
       end
     end
   end
