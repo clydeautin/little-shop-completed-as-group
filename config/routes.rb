@@ -23,7 +23,7 @@ patch "/merchants/:merchant_id/items/:item_id", to: "merchants/items#update"
 resources :admin, only: :index
 
 namespace :admin do
-  resources :merchants, only: [:index]
+  resources :merchants, only: [:index, :show]
 end
 
 end

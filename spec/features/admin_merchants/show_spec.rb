@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "the admin merchants index" do
+RSpec.describe "the admin merchant show page" do
   before(:each) do
     @merchant = create(:merchant)
 
@@ -29,19 +29,19 @@ RSpec.describe "the admin merchants index" do
     2.times { create(:transaction, invoice: @invoice2, result: 'success') }
 
     @invoice3 = create(:invoice, customer: @customer3, status: 1)
-    @invoice_item3 = create(:invoice_item, invoice: @invoice3, item: @item3, quantity: 1, unit_price: @item3.unit_price, status: 2)
+    @invoice_item3 = create(:invoice_item, invoice: @invoice3, item: @item3, quantity: 1, unit_price: @item3.unit_price, status: 1)
     4.times { create(:transaction, invoice: @invoice3, result: 'success') }
 
     @invoice4 = create(:invoice, customer: @customer4, status: 1)
-    @invoice_item4 = create(:invoice_item, invoice: @invoice4, item: @item4, quantity: 1, unit_price: @item4.unit_price, status: 2)
+    @invoice_item4 = create(:invoice_item, invoice: @invoice4, item: @item4, quantity: 1, unit_price: @item4.unit_price, status: 1)
     5.times { create(:transaction, invoice: @invoice4, result: 'success') }
 
     @invoice5 = create(:invoice, customer: @customer5, status: 1)
-    @invoice_item5 = create(:invoice_item, invoice: @invoice5, item: @item1, quantity: 1, unit_price: @item1.unit_price, status: 2)
+    @invoice_item5 = create(:invoice_item, invoice: @invoice5, item: @item1, quantity: 1, unit_price: @item1.unit_price, status: 1)
     3.times { create(:transaction, invoice: @invoice5, result: 'success') }
 
     @invoice6 = create(:invoice, customer: @customer6, status: 0)
-    @invoice_item6 = create(:invoice_item, invoice: @invoice6, item: @item2, quantity: 1, unit_price: @item2.unit_price, status: 2)
+    @invoice_item6 = create(:invoice_item, invoice: @invoice6, item: @item2, quantity: 1, unit_price: @item2.unit_price, status: 0)
     create(:transaction, invoice: @invoice6, result: 'success')
 
     @invoice7 = create(:invoice, customer: @customer7, status: 0)
@@ -57,17 +57,11 @@ RSpec.describe "the admin merchants index" do
     8.times { create(:transaction, invoice: @invoice8, result: 'success') }
   end
 
-  it "displays names of all merchants" do
-    visit admin_merchants_path
-
+  it "should have the artist name" do
+    visit admin_merchant_path(@merchant)
     expect(page).to have_content(@merchant.name)
+
+    visit admin_merchant_path(@merchant2)
     expect(page).to have_content(@merchant2.name)
-  end
-
-  it "should have links for every name" do
-    visit admin_merchants_path
-
-    expect(page).to have_link(@merchant.name)
-    expect(page).to have_link(@merchant2.name)
   end
 end
