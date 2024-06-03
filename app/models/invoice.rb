@@ -14,6 +14,6 @@ class Invoice < ApplicationRecord
   has_many :transactions
 
   def self.incomplete
-    joins(:invoice_items).where.not(invoice_items: {status: 'shipped'}).distinct.order(:created_at)
+    joins(:invoice_items).where.not(invoice_items: {status: 'shipped'})
   end
 end

@@ -10,15 +10,16 @@ Rails.application.routes.draw do
   #   get 'dashboard', on: :member
   # end
 
-  # get "/merchants/:merchant_id/dashboard", to: "merchants/dashboard#show"
+get "/merchants/:merchant_id/dashboard", to: "merchants/dashboard#show"
 
- resources :merchants, only: [] do
-    resources :dashboard, only: [:index], controller: 'merchants/dashboard'
-    resources :invoices, only: [:index, :show], controller: 'merchants/invoices'
-    resources :items, only: [:index, :show, :edit, :new, :create], controller: 'merchants/items'
-  end
-
-  patch "/merchants/:merchant_id/items/:item_id", to: "merchants/items#update"
-  
-  resources :admin, only: :index
+resources :merchants, only: [] do
+  resources :invoices, only: [:index, :show], controller: 'merchants/invoices'
+  resources :items, only: [:index, :show, :edit, :new, :create], controller: 'merchants/items'
 end
+
+patch "/merchants/:merchant_id/items/:item_id", to: "merchants/items#update"
+
+resources :admin, only: :index
+end
+
+# resources :dashboard, only: [:index], controller: 'merchants/dashboard'

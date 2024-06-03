@@ -1,8 +1,5 @@
 <h2>Admin Dashboard</h2>
 
-<p><%= link_to "Admin Merchants Index", "admin/merchants" %></p>
-<p><%= link_to "Admin Invoices Index", "admin/invoices" %></p>
-
 <div id="top_customers">
   <% @merchants.top_five_customers.each do |customer| %>
     <%= "#{customer.first_name} #{customer.last_name} - #{customer.successful_transactions} purchases"%><br>
@@ -10,9 +7,11 @@
 </div><br>
 
 <div id="incomplete_invoices">
-  <% @invoices_incomplete.each do |invoice|%>
+  <% @invoices_incomplete.order(:created_at).each do |invoice|%>
     <%= "Invoice #" %><%= link_to invoice.id, "/admin/invoices/#{invoice.id}"%>
     <%= " - #{invoice.created_at.strftime("%A, %B %d, %Y")}" %><br>
   <% end %>
 </div>
 
+<p><%= link_to "Admin Merchants Index", "admin/merchants" %></p>
+<p><%= link_to "Admin Invoices Index", "admin/invoices" %></p>
