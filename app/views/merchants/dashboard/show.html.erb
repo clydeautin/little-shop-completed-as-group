@@ -13,5 +13,5 @@
   <% end %>
 </div>
 
-<p><%= link_to "Items Index", "merchants/:merchant_id/items" %></p>
-<p><%= link_to "Invoices Index", "merchants/:merchant_id/invoices" %></p>
+<p><%= link_to "Items Index", "merchants/#{@merchant.id}/items" %></p>
+<p><%= link_to "Invoices Index", "merchants/#{@merchant.id}/invoices" %></p>

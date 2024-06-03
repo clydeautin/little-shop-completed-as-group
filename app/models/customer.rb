@@ -16,4 +16,8 @@ class Customer < ApplicationRecord
             .where(transactions: { result: 'success', invoice: @invoice_ids }, items: { merchant_id: @merchant_id })
             .count('transactions.id')
   end
+
+  def successful_transactions
+    transactions.count("transactions.result = 'success'")
+  end
 end

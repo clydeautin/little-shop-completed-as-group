@@ -1,19 +1,19 @@
 require "rails_helper"
 
-RSpec.describe Merchant do
+RSpec.describe Invoice do
   describe "validations" do
-    it {should validate_presence_of :name}
-  end
-  
-  describe "relationships" do
-    it {should have_many :items}
-    it {should have_many(:invoice_items).through(:items)}
-    it {should have_many(:invoices).through(:items)}
-    it {should have_many(:transactions).through(:items)}
-    it {should have_many(:customers).through(:invoices)}
+    it {should validate_presence_of :status}
   end
 
-  before :each do
+  describe "relationships" do
+    it {should belong_to :customer}
+    it {should have_many :transactions}
+    it {should have_many :invoice_items}
+    it {should have_many(:items).through(:invoice_items)}
+    it {should have_many(:merchants).through(:items)}
+  end
+
+  before(:each) do
     @merchant = create(:merchant)
 
     @customer1 = create(:customer)
@@ -41,26 +41,26 @@ RSpec.describe Merchant do
     2.times { create(:transaction, invoice: @invoice2, result: 'success') }
 
     @invoice3 = create(:invoice, customer: @customer3, status: 1)
-    @invoice_item3 = create(:invoice_item, invoice: @invoice3, item: @item3, quantity: 1, unit_price: @item3.unit_price, status: 1)
+    @invoice_item3 = create(:invoice_item, invoice: @invoice3, item: @item3, quantity: 1, unit_price: @item3.unit_price, status: 2)
     4.times { create(:transaction, invoice: @invoice3, result: 'success') }
 
     @invoice4 = create(:invoice, customer: @customer4, status: 1)
-    @invoice_item4 = create(:invoice_item, invoice: @invoice4, item: @item4, quantity: 1, unit_price: @item4.unit_price, status: 1)
+    @invoice_item4 = create(:invoice_item, invoice: @invoice4, item: @item4, quantity: 1, unit_price: @item4.unit_price, status: 2)
     5.times { create(:transaction, invoice: @invoice4, result: 'success') }
 
     @invoice5 = create(:invoice, customer: @customer5, status: 1)
-    @invoice_item5 = create(:invoice_item, invoice: @invoice5, item: @item1, quantity: 1, unit_price: @item1.unit_price, status: 1)
+    @invoice_item5 = create(:invoice_item, invoice: @invoice5, item: @item1, quantity: 1, unit_price: @item1.unit_price, status: 2)
     3.times { create(:transaction, invoice: @invoice5, result: 'success') }
 
     @invoice6 = create(:invoice, customer: @customer6, status: 0)
-    @invoice_item6 = create(:invoice_item, invoice: @invoice6, item: @item2, quantity: 1, unit_price: @item2.unit_price, status: 0)
+    @invoice_item6 = create(:invoice_item, invoice: @invoice6, item: @item2, quantity: 1, unit_price: @item2.unit_price, status: 2)
     create(:transaction, invoice: @invoice6, result: 'success')
 
     @invoice7 = create(:invoice, customer: @customer7, status: 0)
     @invoice_item7 = create(:invoice_item, invoice: @invoice7, item: @item3, quantity: 1, unit_price: @item3.unit_price, status: 0)
     create(:transaction, invoice: @invoice7, result: 'success')
 
-    # second setup for false positives
+    #for false positives
     @merchant2 = create(:merchant)
     @item8 = create(:item, merchant: @merchant2, unit_price: 7000)
   
@@ -70,32 +70,11 @@ RSpec.describe Merchant do
   end
 
   describe "instance methods" do
-    describe "top_five_customers" do
-      it "can return top 5 customers of merchant" do
+    describe "#incomplete" do
+      it "returns invoices that have items not shipped" do
 
-      expect(@merchant.top_five_customers).to eq([@customer1, @customer4, @customer3, @customer5, @customer2])
+        expect(Invoice.incomplete).to eq([@invoice1, @invoice2, @invoice7, @invoice8])
       end
-    end
-
-    describe "items_ready_to_ship" do
-      it "can return merchants items that are ready to ship" do
-
-        @item9 = create(:item, merchant: @merchant, unit_price: 9000)
-        @invoice9 = create(:invoice, customer: @customer7, status: 0)
-        @invoice_item9 = create(:invoice_item, invoice: @invoice9, item: @item9, quantity: 1, unit_price: @item9.unit_price, status: 0)
-        create(:transaction, invoice: @invoice9, result: 'success')
-
-        expect(@merchant.items_ready_to_ship).to eq([@item1, @item2, @item3, @item4, @item1])
-      end
-    end
-  end
-
-  describe "class methods" do
-    describe "top_five_customers" do
-      it "can return top 5 of all customers by successful transactions" do
-
-        expect(Merchant.top_five_customers).to eq([@customer7, @customer1, @customer4, @customer3, @customer5, ])
-        end
     end
   end
 end
