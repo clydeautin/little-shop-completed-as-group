@@ -212,6 +212,16 @@ RSpec.describe "Admin show page" do
           expect(page).to have_content("Customer last name: #{@invoice1.customer.last_name}")
         end
       end
+      it "shows all of my items on the invoice" do
+        admin_invoice_path(@invoice1)
+        # require 'pry'; binding.pry
+        @invoice1.invoice_items.each do |invoice_item|
+          within "#invoice-item-#{invoice_item.item.id}" do
+          expect(page).to have_content("Item Name: #{invoice_item.item.name}")
+          expect(page).to have_content("Quantity Ordered: #{invoice_item.quantity}")
+          expect(page).to have_content("Price Sold For: $#{invoice_item.unit_price}")
+          expect(page).to have_content(invoice_item.status.capitalize)
+          end
     end
   end
 end
