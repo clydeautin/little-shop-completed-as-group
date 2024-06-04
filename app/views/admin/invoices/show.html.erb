@@ -1,0 +1,27 @@
+<h1>Admin Invoice View</h1>
+
+<div id="invoice-<%= @invoice.id %>">
+  <p>Invoice id: <%= @invoice.id %></p>
+  <p>Status: <%= @invoice.status %></p>
+  <p>Created_at: <%= @invoice.created_at.strftime("%A, %B %d, %Y") %></p>
+  <p>Customer first name: <%= @invoice.customer.first_name %></p>
+  <p>Customer last name: <%= @invoice.customer.last_name %></p>
+  <p>Total Invoice Revenue: $<%= @invoice.total_revenue %></p>
+</div>
+
+<h2>Items on this invoice</h2>
+<% @invoice.invoice_items.each do |invoice_item| %>
+  <div id="invoice-item-<%= invoice_item.item.id %>">
+    <p>Item Name: <%= invoice_item.item.name %></p>
+    <p>Quantity Ordered: <%= invoice_item.quantity %></p>
+    <p>Price Sold For: $<%= invoice_item.unit_price %></p>
+
+    <%= form_with url: "/admin/invoice_items/#{invoice_item.id}", method: :patch, data: { turbo: false }, local: true do |f| %>
+      <p>
+        <%= f.label :status %>
+        <%= f.select :status, InvoiceItem.statuses.keys.map { |w| [w.humanize, w] }, selected: invoice_item.status %>
+      </p>
+      <%= f.submit "Update Item Status" %>
+    <% end %>
+  </div>
+<% end %>

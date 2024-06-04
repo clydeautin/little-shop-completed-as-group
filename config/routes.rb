@@ -26,6 +26,8 @@ resources :admin, only: :index
 
 namespace :admin do
   resources :merchants, only: [:index, :show, :edit, :new, :create]
+  resources :invoices, only: [:index, :show]
+  resources :invoice_items, only: [:update]
 end
 
 patch "/admin/merchants/:id", to: "admin/merchants#update", as: "admin_merchant_update"
