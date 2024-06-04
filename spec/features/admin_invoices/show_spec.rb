@@ -212,6 +212,7 @@ RSpec.describe "Admin show page" do
           expect(page).to have_content("Customer last name: #{@invoice1.customer.last_name}")
         end
       end
+
       it "shows all of my items on the invoice" do
         visit admin_invoice_path(@invoice1)
         # save_and_open_page
@@ -223,6 +224,11 @@ RSpec.describe "Admin show page" do
           expect(page).to have_content("Status: #{invoice_item.status}")
           end
         end
+      end
+      it "shows total revenue on the invoice" do
+        visit admin_invoice_path(@invoice1)
+
+        expect(page).to have_content("Total Invoice Revenue: $350")
       end
     end
   end
