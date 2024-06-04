@@ -1,0 +1,8 @@
+<h1>Edit Item</h1>
+<div id="update_attr">
+<%= render partial: 'item_form', locals: {
+                                      url: merchant_item_update_path(@item.merchant_id, @item),
+                                      method: :patch,
+                                      button_text: "Update"
+																	 } %>
+</div>

@@ -1,6 +1,19 @@
 require "rails_helper"
 
 RSpec.describe Invoice, type: :model do
+  
+  describe "relationships" do
+    it {should belong_to :customer}
+    it {should have_many :transactions}
+    it {should have_many :invoice_items}
+    it {should have_many(:items).through(:invoice_items)}
+    it {should have_many(:merchants).through(:items)}
+  end
+
+  describe "validations" do
+    it {should validate_presence_of :status}
+  end
+  
   before(:each) do
     #budget merchant
     @merchant1 = FactoryBot.create(:merchant)
@@ -195,18 +208,18 @@ RSpec.describe Invoice, type: :model do
     @invoice_item24 = FactoryBot.create(:invoice_item, invoice: @invoice18, item: @item24, quantity: 1, unit_price: @item24.unit_price)
     @invoice_item25 = FactoryBot.create(:invoice_item, invoice: @invoice19, item: @item25, quantity: 1, unit_price: @item25.unit_price)
   end
-  describe "relationships" do
-    it {should belong_to :customer}
-    it {should have_many :invoice_items}
-    it {should have_many(:items).through(:invoice_items)}
-    it {should have_many :transactions}
-  end
+
 
   describe "instance methods" do
     it 'can calculate total revenue' do
       expect(@invoice7.total_revenue).to eq(12900)
     end
+
+    describe "#incomplete" do
+      it "returns invoices that have items not shipped" do
+
+        expect(Invoice.incomplete).to eq([@invoice1, @invoice2, @invoice7, @invoice8])
+      end
+    end
   end
-
-
 end
