@@ -202,10 +202,10 @@ RSpec.describe "Admin invoice page" do
     describe "when I visit admin invoices index" do
       it "shows all the invoices ids in the system with links" do
         visit admin_invoices_path
-
-        expect(page).to have_link("#{@invoice1.id}",
-                                  href: admin_invoice_path(@invoice1))
-        save_and_open_page
+        
+        Invoice.all.each do |invoice|
+          expect(page).to have_link("#{invoice.id}", href: admin_invoice_path(invoice))
+        end
       end
     end
   end
