@@ -7,12 +7,20 @@
 <p>Customer last name: <%= @invoice.customer.last_name %></p>
 <p>Total Invoice Revenue: $<%= @invoice.total_revenue %></p>
 
-<h2> Items on this invoice</h2>
+
+<h2>Items on this invoice</h2>
 <% @invoice.invoice_items.each do |invoice_item| %>
   <div id="invoice-item-<%= invoice_item.item.id %>">
     <p>Item Name: <%= invoice_item.item.name %></p>
     <p>Quantity Ordered: <%= invoice_item.quantity %></p>
     <p>Price Sold For: $<%= invoice_item.unit_price %></p>
-    <p>Invoice Item Status: <%= invoice_item.status %></p>
+
+    <%= form_with url: "/merchants/#{@merchant.id}/invoice_items/#{invoice_item.id}", method: :patch, data: { turbo: false }, local: true do |f| %>
+      <p>
+        <%= f.label :status %>
+        <%= f.select :status, InvoiceItem.statuses.keys.map { |w| [w.humanize, w] }, selected: invoice_item.status %>
+      </p>
+      <%= f.submit "Update Item Status" %>
+    <% end %>
   </div>
 <% end %>

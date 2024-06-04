@@ -214,13 +214,13 @@ RSpec.describe "the merchant dashboard page" do
 
       it "shows all of my items on the invoice" do
         visit merchant_invoice_path(@merchant1, @invoice1)
-
+        # require 'pry'; binding.pry
         @invoice1.invoice_items.each do |invoice_item|
           within "#invoice-item-#{invoice_item.item.id}" do
           expect(page).to have_content("Item Name: #{invoice_item.item.name}")
           expect(page).to have_content("Quantity Ordered: #{invoice_item.quantity}")
           expect(page).to have_content("Price Sold For: $#{invoice_item.unit_price}")
-          expect(page).to have_content("Invoice Item Status: #{invoice_item.status}")
+          expect(page).to have_content(invoice_item.status.capitalize)
           end
         end
       end
@@ -228,18 +228,17 @@ RSpec.describe "the merchant dashboard page" do
       it 'shows total revenue for all items on the invoice' do
         visit merchant_invoice_path(@merchant1, @invoice1)
         expect(page).to have_content("Total Invoice Revenue: $350")
-        save_and_open_page
       end
 
       it 'allows you to switch invoice item status' do
         visit merchant_invoice_path(@merchant1, @invoice1)
+        expect(@invoice_item1.status).to eq('pending')
 
-        within "#invoice-item#{@invoice_item1}" do
-          select 'shipped', from: 'Status'
+        within "#invoice-item-#{@invoice_item1.item.id}" do
+          select 'Shipped', :from => 'Status'
           click_button 'Update Item Status'
+          expect(page).to have_selector('p', text: 'Shipped')
         end
-
-        expect(page).to have_content('Invoice Item Status: shipped')
       end
     end
   end
