@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "articles#index"
-  root 'welcome#index'
+  root 'welcome#index' 
 
   # resources :merchants, only: :dashboard do
   #   get 'dashboard', on: :member
@@ -16,8 +16,10 @@ resources :merchants, only: [] do
   resources :dashboard, only: [:index], action: :show, controller: 'merchants/dashboard'
   resources :invoices, only: [:index, :show], controller: 'merchants/invoices'
   resources :items, only: [:index, :show, :edit, :new, :create], controller: 'merchants/items'
+  resources :invoice_items, only: [:update]
 end
 
+patch "/merchants/:merchant_id/invoices/:id", to: "invoice_items#update"
 patch "/merchants/:merchant_id/items/:id", to: "merchants/items#update", as: "merchant_item_update"
 
 resources :admin, only: :index

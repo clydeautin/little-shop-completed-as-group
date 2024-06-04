@@ -13,6 +13,11 @@ class Invoice < ApplicationRecord
   has_many :merchants, through: :items
   has_many :transactions
 
+  def total_revenue
+    invoice_items.sum('unit_price * quantity')
+  end
+  
+
   def self.incomplete
     joins(:invoice_items).where.not(invoice_items: {status: 'shipped'}).order(:created_at).distinct
   end
