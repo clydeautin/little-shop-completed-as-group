@@ -162,7 +162,7 @@ RSpec.describe "Admin show page" do
       end
     end
 
-    @invoice_item1 = FactoryBot.create(:invoice_item, invoice: @invoice1, item: @item1, quantity: 1, unit_price: @item1.unit_price)
+    @invoice_item1 = FactoryBot.create(:invoice_item, invoice: @invoice1, item: @item1, quantity: 1, unit_price: @item1.unit_price, status: 0)
     @invoice_item2 = FactoryBot.create(:invoice_item, invoice: @invoice1, item: @item2, quantity: 2, unit_price: @item2.unit_price)
 
     @invoice_item3 = FactoryBot.create(:invoice_item, invoice: @invoice2, item: @item3, quantity: 2, unit_price: @item3.unit_price)
@@ -221,14 +221,25 @@ RSpec.describe "Admin show page" do
           expect(page).to have_content("Item Name: #{invoice_item.item.name}")
           expect(page).to have_content("Quantity Ordered: #{invoice_item.quantity}")
           expect(page).to have_content("Price Sold For: $#{invoice_item.unit_price}")
-          expect(page).to have_content("Status: #{invoice_item.status}")
+          expect(page).to have_content(invoice_item.status.capitalize)
           end
         end
       end
+
       it "shows total revenue on the invoice" do
         visit admin_invoice_path(@invoice1)
 
         expect(page).to have_content("Total Invoice Revenue: $350")
+      end
+
+      it 'allows you to switch invoice item status' do
+        visit admin_invoice_path(@invoice1)
+        expect(@invoice_item1.status).to eq('pending')
+        within "#invoice-item-#{@invoice_item1.item.id}" do
+          select 'Shipped', :from => 'Status'
+          click_button 'Update Item Status'
+          expect(page).to have_selector('p', text: 'Shipped')
+        end
       end
     end
   end
