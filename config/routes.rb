@@ -19,6 +19,7 @@ resources :merchants, only: [] do
   resources :invoice_items, only: [:update]
 end
 
+patch "/merchants/:merchant_id/invoices/:id", to: "invoice_items#update"
 patch "/merchants/:merchant_id/items/:id", to: "merchants/items#update", as: "merchant_item_update"
 
 resources :admin, only: :index
