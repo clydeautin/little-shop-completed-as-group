@@ -6,30 +6,23 @@ Rails.application.routes.draw do
   # root "articles#index"
   root 'welcome#index' 
 
-  # resources :merchants, only: :dashboard do
-  #   get 'dashboard', on: :member
-  # end
+  resources :merchants, only: [:index] do
+    resources :dashboard, only: [:index], action: :show, controller: 'merchants/dashboard'
+    resources :invoices, only: [:index, :show], controller: 'merchants/invoices'
+    resources :items, only: [:index, :show, :edit, :new, :create], controller: 'merchants/items'
+    resources :invoice_items, only: [:update]
+  end
 
-# get "/merchants/:merchant_id/dashboard", to: "merchants/dashboard#show"
+  patch "/merchants/:merchant_id/invoices/:id", to: "invoice_items#update"
+  patch "/merchants/:merchant_id/items/:id", to: "merchants/items#update", as: "merchant_item_update"
 
-resources :merchants, only: [:index] do
-  resources :dashboard, only: [:index], action: :show, controller: 'merchants/dashboard'
-  resources :invoices, only: [:index, :show], controller: 'merchants/invoices'
-  resources :items, only: [:index, :show, :edit, :new, :create], controller: 'merchants/items'
-  resources :invoice_items, only: [:update]
-end
+  resources :admin, only: :index
 
-patch "/merchants/:merchant_id/invoices/:id", to: "invoice_items#update"
-patch "/merchants/:merchant_id/items/:id", to: "merchants/items#update", as: "merchant_item_update"
+  namespace :admin do
+    resources :merchants, only: [:index, :show, :edit, :new, :create]
+    resources :invoices, only: [:index, :show]
+  end
 
-resources :admin, only: :index
-
-namespace :admin do
-  resources :merchants, only: [:index, :show, :edit, :new, :create]
-  resources :invoices, only: [:index, :show]
-  resources :invoice_items, only: [:update]
-end
-
-patch "/admin/merchants/:id", to: "admin/merchants#update", as: "admin_merchant_update"
-
+  patch "/admin/invoice_items/:id", to: "admin/invoice_items#update"
+  patch "/admin/merchants/:id", to: "admin/merchants#update", as: "admin_merchant_update"
 end
