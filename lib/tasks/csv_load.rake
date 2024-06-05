@@ -35,7 +35,7 @@ namespace :csv_load do
       InvoiceItem.create!(row.to_hash)
     end
     ActiveRecord::Base.connection.reset_pk_sequence!('invoice_items')
-    enable_foreign_keys
+    # enable_foreign_keys
     puts "Successfully loaded invoice_items"
   end
 
@@ -83,7 +83,7 @@ namespace :csv_load do
 
   desc "Load transaction csv data task"
   task transactions: :environment do
-    disable_foreign_keys
+    # disable_foreign_keys
     Transaction.destroy_all
     transactions_path = "./db/data/transactions.csv"
     CSV.foreach(transactions_path, headers: true) do |row|
