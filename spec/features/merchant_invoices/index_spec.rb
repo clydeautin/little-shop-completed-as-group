@@ -12,7 +12,6 @@ RSpec.describe "the merchant dashboard page" do
     @merchant5 = FactoryBot.create(:merchant)
     @merchant6 = FactoryBot.create(:merchant)
 
-
     @customer1 = FactoryBot.create(:customer)
     @customer2 = FactoryBot.create(:customer)
     @customer3 = FactoryBot.create(:customer)
@@ -20,9 +19,6 @@ RSpec.describe "the merchant dashboard page" do
     @customer5 = FactoryBot.create(:customer)
     @customer6 = FactoryBot.create(:customer)
     @customer7 = FactoryBot.create(:customer)
-    # @customer8 = FactoryBot.create(:customer)
-    # @customer9 = FactoryBot.create(:customer)
-    # @customer10 = FactoryBot.create(:customer)
 
     #budget merchant
     @item1 = FactoryBot.create(:item, merchant: @merchant1, unit_price: 110)
@@ -32,9 +28,7 @@ RSpec.describe "the merchant dashboard page" do
     @item5 = FactoryBot.create(:item, merchant: @merchant1, unit_price: 220)
     @item6 = FactoryBot.create(:item, merchant: @merchant1, unit_price: 230)
     @item7 = FactoryBot.create(:item, merchant: @merchant1, unit_price: 310)
-    # @item8 = FactoryBot.create(:item, merchant: @merchant1, unit_price: 320)
-    # @item9 = FactoryBot.create(:item, merchant: @merchant1, unit_price: 330)
-    
+
     #mid tier merchant
     @item8 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 1100)
     @item9 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 1200)
@@ -43,8 +37,6 @@ RSpec.describe "the merchant dashboard page" do
     @item12 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 2200)
     @item13 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 2300)
     @item14 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 3100)
-    # @item17 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 3200)
-    # @item18 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 3300)
 
     @item15 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 1100)
     @item16 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 1200)
@@ -53,8 +45,6 @@ RSpec.describe "the merchant dashboard page" do
     @item19 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 2200)
     @item20 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 2300)
     @item21 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 3100)
-    # @item26 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 3200)
-    # @item27 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 3300)
 
     @item22 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 1100)
     @item23 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 1200)
@@ -63,8 +53,6 @@ RSpec.describe "the merchant dashboard page" do
     @item26 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 2200)
     @item27 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 2300)
     @item28 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 3100)
-    # @item35 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 3200)
-    # @item36 = FactoryBot.create(:item, merchant: @merchant2, unit_price: 3300)
 
     #high tier items
     @item29 = FactoryBot.create(:item, merchant: @merchant3, unit_price: 11000)
@@ -74,8 +62,6 @@ RSpec.describe "the merchant dashboard page" do
     @item33 = FactoryBot.create(:item, merchant: @merchant3, unit_price: 22000)
     @item34 = FactoryBot.create(:item, merchant: @merchant3, unit_price: 23000)
     @item35 = FactoryBot.create(:item, merchant: @merchant3, unit_price: 31000)
-    # @item44 = FactoryBot.create(:item, merchant: @merchant3, unit_price: 32000)
-    # @item45 = FactoryBot.create(:item, merchant: @merchant3, unit_price: 33000)
 
     #invoices
     @invoices_tier1 = [
@@ -101,33 +87,11 @@ RSpec.describe "the merchant dashboard page" do
 
     @invoice17 = FactoryBot.create(:invoice, customer: @customer5, status: 1)
     @invoice18 = FactoryBot.create(:invoice, customer: @customer5, status: 1)
-    # @invoice19 = FactoryBot.create(:invoice, customer: @customer5, status: 1)
-    
+
     @invoices_tier2 = [
     @invoice19 = FactoryBot.create(:invoice, customer: @customer6, status: 1),
-    # @invoice21 = FactoryBot.create(:invoice, customer: @customer6, status: 2)
-    # @invoice22 = FactoryBot.create(:invoice, customer: @customer6, status: 2)
-
     @invoice20 = FactoryBot.create(:invoice, customer: @customer7, status: 0)
-    # @invoice24 = FactoryBot.create(:invoice, customer: @customer7, status: 1)
-    # @invoice25 = FactoryBot.create(:invoice, customer: @customer7, status: 2)
-
-    # @invoice26 = FactoryBot.create(:invoice, customer: @customer8, status: 0)
-    # @invoice27 = FactoryBot.create(:invoice, customer: @customer8, status: 1)
-    # @invoice28 = FactoryBot.create(:invoice, customer: @customer8, status: 1)
-
-    # @invoice29 = FactoryBot.create(:invoice, customer: @customer9, status: 0)
-    # @invoice30 = FactoryBot.create(:invoice, customer: @customer9, status: 0)
-    # @invoice31 = FactoryBot.create(:invoice, customer: @customer9, status: 0)
-
-    # @invoice32 = FactoryBot.create(:invoice, customer: @customer10, status: 2)
-    # @invoice33 = FactoryBot.create(:invoice, customer: @customer10, status: 2)
-    # @invoice34 = FactoryBot.create(:invoice, customer: @customer10, status: 2)
     ]
-
-    # @transaction1 = FactoryBot.create(:transaction, invoice: @invoice1, result: "success")
-    # @transaction2 = FactoryBot.create(:transaction, invoice: @invoice1)
-    # @transaction3 = FactoryBot.create(:transaction, invoice: @invoice1)
 
     [@invoice1, @invoice2, @invoice3, @invoice4, @invoice5].each do |invoice|
       3.times do
