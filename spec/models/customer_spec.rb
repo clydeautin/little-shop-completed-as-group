@@ -88,4 +88,13 @@ RSpec.describe Customer, type: :model do
       end
     end
   end
+
+  describe "class methods" do
+    describe "top_five_customers" do
+      it "can return top 5 of all customers by successful transactions" do
+
+        expect(Customer.top_five_customers).to eq([@customer1, @customer4, @customer3, @customer5, @customer2])
+        end
+    end
+  end
 end

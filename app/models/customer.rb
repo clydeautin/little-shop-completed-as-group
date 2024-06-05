@@ -20,4 +20,12 @@ class Customer < ApplicationRecord
   def successful_transactions
     transactions.count("transactions.result = 'success'")
   end
+
+  def self.top_five_customers
+    Customer.joins(:transactions)
+      .where(transactions: {result: 'success'})
+      .group('customers.id')
+      .order('count(transactions.id) desc')
+      .limit(5)
+  end
 end
