@@ -5,10 +5,13 @@ namespace :csv_load do
   def disable_foreign_keys
     ActiveRecord::Base.connection.execute("SET session_replication_role = 'replica';")
   end
-
+  
   def enable_foreign_keys
     ActiveRecord::Base.connection.execute("SET session_replication_role = 'origin';")
   end
+  # These methods work to bypass foreign key restraints
+  # I wasn't sure how else to handle the foreign key restraint while deleting records with children. 
+  # This seems like an unsafe way to do this but I'm not sure
 
   desc "Load customers csv data task"
   task customers: :environment do
