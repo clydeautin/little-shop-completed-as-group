@@ -59,7 +59,7 @@ namespace :csv_load do
     items_path = "./db/data/items.csv"
     CSV.foreach(items_path, headers: true) do |row|
       row_hash = row.to_hash
-      row_hash["status"] = 'enabled'
+      row_hash["status"] = 'disabled'
 
       Item.create!(row_hash)
     end
@@ -74,7 +74,10 @@ namespace :csv_load do
     Merchant.destroy_all
     merchants_path = "./db/data/merchants.csv"
     CSV.foreach(merchants_path, headers: true) do |row|
-      Merchant.create!(row.to_hash)
+      row_hash = row.to_hash
+      row_hash["status"] = 'disabled'
+
+      Merchant.create!(row_hash)
     end
     ActiveRecord::Base.connection.reset_pk_sequence!('merchants')
     # enable_foreign_keys

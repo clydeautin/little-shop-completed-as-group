@@ -184,7 +184,7 @@ RSpec.describe "the merchant dashboard page" do
           within "#invoice-item-#{invoice_item.item.id}" do
           expect(page).to have_content("Item Name: #{invoice_item.item.name}")
           expect(page).to have_content("Quantity Ordered: #{invoice_item.quantity}")
-          expect(page).to have_content("Price Sold For: $#{invoice_item.unit_price}")
+          expect(page).to have_content("Price Sold For: $#{"%.2f" % (invoice_item.unit_price.to_f / 100)}")
           expect(page).to have_content(invoice_item.status.capitalize)
           end
         end
@@ -193,7 +193,7 @@ RSpec.describe "the merchant dashboard page" do
       it 'shows total revenue for all items on the invoice' do
         visit merchant_invoice_path(@merchant1, @invoice1)
 
-        expect(page).to have_content("Total Invoice Revenue: $350")
+        expect(page).to have_content("Total Invoice Revenue: $3.50")
       end
 
       it 'allows you to switch invoice item status' do

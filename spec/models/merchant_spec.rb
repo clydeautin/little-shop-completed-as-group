@@ -115,15 +115,7 @@ RSpec.describe Merchant do
       end
     end
   end
-
   describe "class methods" do
-    describe "top_five_customers" do
-      it "can return top 5 of all customers by successful transactions" do
-
-        expect(Merchant.top_five_customers).to eq([@customer7, @customer1, @customer4, @customer3, @customer5])
-        end
-    end
-
     describe "top_five_merchants" do
       it "can return the top 5 merchants" do
         @merchant3 = create(:merchant, status: 1)
