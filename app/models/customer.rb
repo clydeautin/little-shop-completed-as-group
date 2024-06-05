@@ -10,15 +10,14 @@ class Customer < ApplicationRecord
 
   def successful_transactions_with_merchant(merchant)
     @merchant_id = merchant.id
-    @invoice_ids = transactions.pluck(:invoice_id)
-    invoices.joins(invoice_items: :item)
-            .joins(:transactions)
-            .where(transactions: { result: 'success', invoice: @invoice_ids }, items: { merchant_id: @merchant_id })
-            .count('transactions.id')
+    @transaction_ids = transactions.pluck(:id)
+    transactions.joins(invoice: :items)
+                .where(items: { merchant_id: @merchant_id }, id: @transaction_ids, result: 'success')
+                .count
   end
 
   def successful_transactions
-    transactions.count("transactions.result = 'success'")
+    transactions.where(transactions: {result: 'success'}).count
   end
 
   def self.top_five_customers
