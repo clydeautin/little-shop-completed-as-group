@@ -1,5 +1,4 @@
 class Admin::InvoiceItemsController < ApplicationController
-
   def update
     @invoice_item = InvoiceItem.find(params[:id])
     if @invoice_item.update(invoice_item_params)

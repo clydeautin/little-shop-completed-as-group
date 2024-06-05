@@ -42,12 +42,12 @@ class Merchant < ApplicationRecord
   end
 
   def top_five_items
-    items.joins(:transactions)
-     .where(transactions: { result: 'success' })
-     .select('items.*, sum(invoice_items.quantity * invoice_items.unit_price) as total_revenue')
-     .group(:id)
-     .order('total_revenue desc')
-     .limit(5)
+  items.joins(:transactions)
+    .where(transactions: { result: 'success' })
+    .select('items.*, sum(invoice_items.quantity * invoice_items.unit_price) as total_revenue')
+    .group(:id)
+    .order('total_revenue desc')
+    .limit(5)
   end
 
   def self.enabled_merchants
@@ -60,11 +60,11 @@ class Merchant < ApplicationRecord
 
   def self.top_five_merchants
     Merchant.joins(:transactions)
-     .where(transactions: { result: 'success' })
-     .select('merchants.*, sum(invoice_items.quantity * invoice_items.unit_price) as total_revenue')
-     .group(:id)
-     .order('total_revenue desc')
-     .limit(5)
+    .where(transactions: { result: 'success' })
+    .select('merchants.*, sum(invoice_items.quantity * invoice_items.unit_price) as total_revenue')
+    .group(:id)
+    .order('total_revenue desc')
+    .limit(5)
   end
 
   def merchant_best_day

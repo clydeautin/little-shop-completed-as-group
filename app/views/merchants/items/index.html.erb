@@ -1,15 +1,16 @@
 <h1>Items Index</h1>
 <%= link_to "Create New Item", new_merchant_item_path %>
 <div id="top_five">
-<h2>Top 5 Most Popular Items</h2>
-<% @top_five_items.each do |item| %>
-  <%= link_to "#{item.name}", merchant_item_path(merchant_id: item.merchant, id: item) %>
-  <%= "Total Revenue Generated: $#{"%.2f" % (item.total_revenue.to_f / 100)}" %>
-  <br>
-  <%= "Top selling date for #{item.name} was #{item.best_day.strftime("%A, %B %d, %Y")}" %>
-  <br>
-  <% end %>
+  <h2>Top 5 Most Popular Items</h2>
+    <% @top_five_items.each do |item| %>
+      <%= link_to "#{item.name}", merchant_item_path(merchant_id: item.merchant, id: item) %>
+      <%= "Total Revenue Generated: $#{"%.2f" % (item.total_revenue.to_f / 100)}" %>
+      <br>
+      <%= "Top selling date for #{item.name} was #{item.best_day.strftime("%A, %B %d, %Y")}" %>
+      <br>
+    <% end %>
 </div>
+
 <div id="merchant_items">
 <h3>Enabled Items</h3>
 <div id="enabled_items">
@@ -20,6 +21,7 @@
     </div>
   <% end %>
 </div>
+
 <div id="disabled_items">
 <h3>Disabled Items</h3>
   <% @disabled_items.each do |item| %>
