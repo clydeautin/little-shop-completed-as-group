@@ -48,7 +48,6 @@ RSpec.describe "the merchant dashboard page" do
     @invoice_item7 = create(:invoice_item, invoice: @invoice7, item: @item3, quantity: 1, unit_price: @item3.unit_price, status: 0)
     create(:transaction, invoice: @invoice7, result: 'success')
 
-    #for false positives
     @merchant2 = create(:merchant)
     @item8 = create(:item, merchant: @merchant2, unit_price: 7000)
   
@@ -57,13 +56,12 @@ RSpec.describe "the merchant dashboard page" do
     8.times { create(:transaction, invoice: @invoice8, result: 'success') }
   end
 
-  #us19
   it "displays the admin dashboard" do
     visit "/admin"
 
     expect(page).to have_content("Admin Dashboard")
   end
-  #us20
+
   it "has links for merchant items index and merchant invoices index" do
     visit "/admin"
 
@@ -71,7 +69,6 @@ RSpec.describe "the merchant dashboard page" do
     expect(page).to have_link("Admin Invoices Index")
   end
 
-  #us21
   it "has top 5 of all customers names each with successful transaction count " do
     visit "/admin"
 
@@ -84,7 +81,6 @@ RSpec.describe "the merchant dashboard page" do
     end
   end
 
-  #us22
   it "has all invoices id that have items that have not shipped, each id is a link to that invoice's admin show page" do
     visit "/admin"
 
@@ -106,7 +102,6 @@ RSpec.describe "the merchant dashboard page" do
     end
   end
 
-  #us23
   it "can see invoice created date next to each invoice ordered from oldest to newest" do
     @invoice1.created_at = "2022-01-22 00:00:00"
     @invoice1.save

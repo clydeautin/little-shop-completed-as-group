@@ -48,7 +48,6 @@ RSpec.describe "the merchant dashboard page" do
     @invoice_item7 = create(:invoice_item, invoice: @invoice7, item: @item3, quantity: 1, unit_price: @item3.unit_price, status: 0)
     create(:transaction, invoice: @invoice7, result: 'success')
 
-    #for false positives
     @merchant2 = create(:merchant)
     @item8 = create(:item, merchant: @merchant2, unit_price: 7000)
   
@@ -70,13 +69,6 @@ RSpec.describe "the merchant dashboard page" do
     expect(page).to have_link("Invoices Index")
   end
 
-  # 3. Merchant Dashboard Statistics - Favorite Customers
-  # As a merchant,
-  # When I visit my merchant dashboard (/merchants/:merchant_id/dashboard)
-  # Then I see the names of the top 5 customers
-  # who have conducted the largest number of successful transactions with my merchant
-  # And next to each customer name I see the number of successful transactions they have
-  # conducted with my merchant
   it "has top 5 customer names each with successful transaction count with merchant" do
     visit "/merchants/#{@merchant.id}/dashboard"
 
@@ -89,14 +81,6 @@ RSpec.describe "the merchant dashboard page" do
     end
   end
 
-  # 4. Merchant Dashboard Items Ready to Ship
-  # As a merchant
-  # When I visit my merchant dashboard (/merchants/:merchant_id/dashboard)
-  # Then I see a section for "Items Ready to Ship"
-  # In that section I see a list of the names of all of my items that
-  # have been ordered and have not yet been shipped,
-  # And next to each Item I see the id of the invoice that ordered my item
-  # And each invoice id is a link to my merchant's invoice show page
   it "has list of all items name each with its invoice id as a link to merchant invoice show page" do
     visit "/merchants/#{@merchant.id}/dashboard"
 
@@ -117,13 +101,6 @@ RSpec.describe "the merchant dashboard page" do
     end
   end
 
-  # 5. Merchant Dashboard Invoices sorted by least recent
-  # As a merchant
-  # When I visit my merchant dashboard (/merchants/:merchant_id/dashboard)
-  # In the section for "Items Ready to Ship",
-  # Next to each Item name I see the date that the invoice was created
-  # And I see the date formatted like "Monday, July 18, 2019"
-  # And I see that the list is ordered from oldest to newest
   it "can see date on invoice creation next to each item ordered from oldest to newest" do
     @invoice1.created_at = "2022-01-22 00:00:00"
     @invoice1.save

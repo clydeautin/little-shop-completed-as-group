@@ -48,7 +48,6 @@ RSpec.describe "the merchant item index page" do
     @invoice_item7 = create(:invoice_item, invoice: @invoice7, item: @item3, quantity: 1, unit_price: @item3.unit_price, status:01)
     create(:transaction, invoice: @invoice7, result: 'success')
 
-    #for false positives
     @merchant2 = create(:merchant)
     @item8 = create(:item, merchant: @merchant2, unit_price: 7000)
   
@@ -57,7 +56,6 @@ RSpec.describe "the merchant item index page" do
     8.times { create(:transaction, invoice: @invoice8, result: 'success') }
   end
 
-  # us6
   it "I see a list of the names of all of my items and I do not see items for any other merchant" do
     visit "/merchants/#{@merchant.id}/items"
 
@@ -74,7 +72,6 @@ RSpec.describe "the merchant item index page" do
     end
   end
 
-  #us9
   it "I can disable or enable an item with a button next to the item" do
     visit "/merchants/#{@merchant.id}/items"
 
@@ -102,7 +99,6 @@ RSpec.describe "the merchant item index page" do
     end
   end
   
-  #US10
   it "groups items by enabled and disabled" do
     visit "/merchants/#{@merchant.id}/items"
 
@@ -125,8 +121,6 @@ RSpec.describe "the merchant item index page" do
     end
   end
 
-  #US11
-
   it "has a link to create new item" do
     visit merchant_items_path(@merchant)
 
@@ -137,7 +131,6 @@ RSpec.describe "the merchant item index page" do
     expect(current_path).to eq(new_merchant_item_path(merchant_id: @merchant))
   end
 
-  #US12
   it "can create a list of top 5 items" do
     @invoice9 = create(:invoice, customer: @customer7, status: 0)
     @invoice_item9 = create(:invoice_item, invoice: @invoice9, item: @item5, quantity: 1, unit_price: @item5.unit_price, status: 0)
@@ -159,7 +152,6 @@ RSpec.describe "the merchant item index page" do
     end
   end
 
-  #US13
   it "displays biggest day for most popular items" do
     visit merchant_items_path(@merchant)
 
@@ -167,5 +159,4 @@ RSpec.describe "the merchant item index page" do
       expect(page).to have_content("Top selling date for #{@item4.name} was #{@invoice4.created_at.strftime("%A, %B %d, %Y")}")
     end
   end
-
 end

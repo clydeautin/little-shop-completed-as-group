@@ -17,7 +17,6 @@ class Invoice < ApplicationRecord
     invoice_items.sum('unit_price * quantity')
   end
   
-
   def self.incomplete
     joins(:invoice_items).where.not(invoice_items: {status: 'shipped'}).order(:created_at).distinct
   end

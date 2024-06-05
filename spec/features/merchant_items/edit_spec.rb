@@ -56,11 +56,7 @@ RSpec.describe "the merchant item edit page" do
     8.times { create(:transaction, invoice: @invoice8, result: 'success') }
   end
 
-  # us8.part2
-  it "I see a form filled in with the existing item attribute information
-    When I update the information in the form and I click ‘submit’
-    Then I am redirected back to the item show page where I see the updated information
-    And I see a flash message stating that the information has been successfully updated." do
+  it "I can update item with a form and see that it's updated" do
       
     visit "/merchants/#{@merchant.id}/items/#{@item1.id}"
       

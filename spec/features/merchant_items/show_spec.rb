@@ -48,7 +48,6 @@ RSpec.describe "the merchant item show page" do
     @invoice_item7 = create(:invoice_item, invoice: @invoice7, item: @item3, quantity: 1, unit_price: @item3.unit_price, status:01)
     create(:transaction, invoice: @invoice7, result: 'success')
 
-    #for false positives
     @merchant2 = create(:merchant)
     @item8 = create(:item, merchant: @merchant2, unit_price: 7000)
   
@@ -57,7 +56,6 @@ RSpec.describe "the merchant item show page" do
     8.times { create(:transaction, invoice: @invoice8, result: 'success') }
   end
 
-  # us7
   it "I see all of the item's attributes including: Name, Description, Current Selling Price" do
     visit "/merchants/#{@merchant.id}/items/#{@item1.id}"
 
@@ -68,7 +66,6 @@ RSpec.describe "the merchant item show page" do
     end
   end
 
-  # us8.part1
   it "has a link to update item info" do
     visit "/merchants/#{@merchant.id}/items/#{@item1.id}"
 
