@@ -1,16 +1,18 @@
 # Little Esty Shop
 
 ## Group Member
-Chee Lee
-Clyde Autin
-James Mchugh
+Chee Lee (https://github.com/cheeleertr)
+Clyde Autin (https://github.com/clydeautin)
+James McHugh (https://github.com/jdmchugh111)
 
 - [DTR](https://docs.google.com/document/d/1OiePLXWPt8AbB-YStQTsF1T4BcGlzboKxp_3Gjk7iHg/edit?usp=sharing)
 - [ER Diagram](https://dbdiagram.io/d/66493e60f84ecd1d228ada49)
 
 ## Background and Description
 
-"Little Esty Shop" is a group project that requires students to build a fictitious e-commerce platform where merchants and admins can manage inventory and fulfill customer invoices.
+"Little Esty Shop" is a group project that requires students to build a fictitious e-commerce platform where merchants and admins can manage inventory and fulfill customer invoices. 
+
+We worked through all 36 user stories and deployed our app to heroku. Potential refactoring would involve more CSS styling, and some potential code clean-up.
 
 ## Learning Goals
 - Practice designing a normalized database schema and defining model relationships
