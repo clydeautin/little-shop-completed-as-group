@@ -63,6 +63,13 @@ RSpec.describe "the merchant dashboard page" do
     @invoice8 = create(:invoice, customer: @customer7, status: 1)
     @invoice_item8 = create(:invoice_item, invoice: @invoice8, item: @item8, quantity: 1, unit_price: @item8.unit_price, status: 1)
     8.times { create(:transaction, invoice: @invoice8, result: 'success') }
+
+    @july4 = Discount.create!(name: "Independence Day", percentage: 10, threshold: 3, merchant_id: @merchant1.id)
+    @labor_day = Discount.create!(name: "Labor Day", percentage: 20, threshold: 5, merchant_id: @merchant1.id)
+    @xmas = Discount.create!(name: "Christmas", percentage: 30, threshold: 10, merchant_id: @merchant1.id)
+
+    @xmas = Discount.create!(name: "Joyeux nouvelle annee", percentage: 17, threshold: 14, merchant_id: @merchant2.id)
+
   end
 
   it "displays the name of the merchant" do
@@ -136,28 +143,28 @@ RSpec.describe "the merchant dashboard page" do
 
   #   As a merchant
   # When I visit my merchant dashboard
-  # [] Then I see a link to view all my discounts
+  # [x] Then I see a link to view all my discounts
   # When I click this link
   # Then I am taken to my bulk discounts index page
-  # [] Where I see all of my bulk discounts including their
-  # [] percentage discount and quantity thresholds
-  # [] And each bulk discount listed includes a link to its show page
+  # [x] Where I see all of my bulk discounts including their
+  # [x] percentage discount and quantity thresholds
+  # [x] And each bulk discount listed includes a link to its show page
 
-  xit 'has a link to bulk discount index' do
+  it 'has a link to bulk discount index' do
 
     visit "/merchants/#{@merchant1.id}/dashboard"
 
-    expect(page).to have_link("View All my Discounts", href: "/merchants/#{@merchant.id}/discounts")
+    expect(page).to have_link("View All my Discounts", href: merchant_discounts_path(@merchant1.id))
     click_link("View All my Discounts")
 
     expect(page).to have_current_path("/merchants/#{@merchant1.id}/discounts")
-
+    save_and_open_page
     @merchant1.discounts.each do |discount|
       within "#discount-#{discount.id}" do
       expect(page).to have_content("Promo name: #{discount.name}")
       expect(page).to have_content("Discount percentage: #{discount.percentage}")
       expect(page).to have_content("Quantity threshold: #{discount.threshold}")
-      expect(page).to have_link("/merchants/#{discount.merchant.id}/discounts/#{discount.id}")
+      expect(page).to have_link("Discount Details", href: "/merchants/#{discount.merchant.id}/discounts/#{discount.id}")
       end
     end
   end

@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     resources :invoices, only: [:index, :show], controller: 'merchants/invoices'
     resources :items, only: [:index, :show, :edit, :new, :create], controller: 'merchants/items'
     resources :invoice_items, only: [:update]
+    resources :discounts, only: [:index, :show, :edit, :new, :create], controller: 'merchants/discounts'
   end
 
   patch "/merchants/:merchant_id/invoices/:id", to: "invoice_items#update"
