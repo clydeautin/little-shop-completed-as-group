@@ -1,12 +1,11 @@
-# Little Esty Shop
+# Little Esty Shop - Final IC
+
+ER Diagram
+<img width="1253" alt="Screenshot 2024-06-06 at 3 35 04 PM" src="https://github.com/clydeautin/little-shop-completed-as-group/assets/15273149/1385d3d8-d896-4b8f-9b75-53f5ab2320eb">
+
+
 
 ## Group Member
-- Chee Lee [GitHub](https://github.com/cheeleertr)
-- Clyde Autin [GitHub](https://github.com/clydeautin)
-- James McHugh [GitHub](https://github.com/jdmchugh111)
-
-- [DTR](https://docs.google.com/document/d/1OiePLXWPt8AbB-YStQTsF1T4BcGlzboKxp_3Gjk7iHg/edit?usp=sharing)
-- [ER Diagram](https://dbdiagram.io/d/66493e60f84ecd1d228ada49)
 
 ## Background and Description
 
