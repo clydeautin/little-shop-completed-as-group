@@ -1,9 +1,9 @@
 # Little Esty Shop
 
 ## Group Member
-Chee Lee (https://github.com/cheeleertr)
-Clyde Autin (https://github.com/clydeautin)
-James McHugh (https://github.com/jdmchugh111)
+- Chee Lee [GitHub](https://github.com/cheeleertr)
+- Clyde Autin [GitHub](https://github.com/clydeautin)
+- James McHugh [GitHub](https://github.com/jdmchugh111)
 
 - [DTR](https://docs.google.com/document/d/1OiePLXWPt8AbB-YStQTsF1T4BcGlzboKxp_3Gjk7iHg/edit?usp=sharing)
 - [ER Diagram](https://dbdiagram.io/d/66493e60f84ecd1d228ada49)
