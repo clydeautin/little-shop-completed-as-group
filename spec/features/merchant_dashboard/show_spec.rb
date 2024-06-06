@@ -3,6 +3,15 @@ require "rails_helper"
 RSpec.describe "the merchant dashboard page" do
   before(:each) do
     @merchant = create(:merchant)
+    #budget merchant
+    @merchant1 = FactoryBot.create(:merchant)
+    #mid-tier merchant
+    @merchant2 = FactoryBot.create(:merchant)
+    #high-tier merchant
+    @merchant3 = FactoryBot.create(:merchant)
+    @merchant4 = FactoryBot.create(:merchant)
+    @merchant5 = FactoryBot.create(:merchant)
+    @merchant6 = FactoryBot.create(:merchant)
 
     @customer1 = create(:customer)
     @customer2 = create(:customer)
@@ -122,6 +131,34 @@ RSpec.describe "the merchant dashboard page" do
       expect("Invoice ##{@invoice5.id}").to appear_before("Invoice ##{@invoice1.id}", only_text: true)
       expect("Invoice ##{@invoice1.id}").to appear_before("Invoice ##{@invoice4.id}", only_text: true)
       expect("Invoice ##{@invoice2.id}").to appear_before("Invoice ##{@invoice4.id}", only_text: true)
+    end
+  end
+
+  #   As a merchant
+  # When I visit my merchant dashboard
+  # [] Then I see a link to view all my discounts
+  # When I click this link
+  # Then I am taken to my bulk discounts index page
+  # [] Where I see all of my bulk discounts including their
+  # [] percentage discount and quantity thresholds
+  # [] And each bulk discount listed includes a link to its show page
+
+  it 'has a link to bulk discount index' do
+
+    visit "/merchants/#{@merchant1.id}/dashboard"
+
+    expect(page).to have_link("View All my Discounts", href: "/merchants/#{@merchant.id}/discounts")
+    click_link("View All my Discounts")
+
+    expect(page).to have_current_path("/merchants/#{@merchant1.id}/discounts")
+
+    @merchant1.discounts.each do |discount|
+      within "#discount-#{discount.id}" do
+      expect(page).to have_content("Promo name: #{discount.name}")
+      expect(page).to have_content("Discount percentage: #{discount.percentage}")
+      expect(page).to have_content("Quantity threshold: #{discount.threshold}")
+      expect(page).to have_link("/merchants/#{discount.merchant.id}/discounts/#{discount.id}")
+      end
     end
   end
 end
