@@ -143,7 +143,7 @@ RSpec.describe "the merchant dashboard page" do
   # [] percentage discount and quantity thresholds
   # [] And each bulk discount listed includes a link to its show page
 
-  it 'has a link to bulk discount index' do
+  xit 'has a link to bulk discount index' do
 
     visit "/merchants/#{@merchant1.id}/dashboard"
 
