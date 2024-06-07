@@ -1,5 +1,7 @@
 <h1><%= @merchant.name %> discounts</h1>
 
+<p><%= link_to "Create a new bulk discount", href: new_merchant_discount_path(@merchant)%>
+
 <% @merchant.discounts.each do |discount| %>
   <div id="discount-<%= discount.id %>">
     <p>Promo name: <%= discount.name %></p>
