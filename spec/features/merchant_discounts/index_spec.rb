@@ -88,6 +88,7 @@ RSpec.describe "the discount index page" do
       expect(page).to have_button("Delete Discount")
       click_button "Delete Discount"
     end
+
     expect(current_path).to eq(merchant_discounts_path(@merchant1))
     expect(page).to_not have_content(@july4.name)
   end

@@ -8,6 +8,7 @@
     <p>Discount percentage: <%= discount.percentage %>%</p>
     <p>Quantity threshold: <%= discount.threshold %></p>
     <p><%= link_to "Discount Details", merchant_discount_path(@merchant, discount) %></p>
+    <p><%= button_to "Delete Discount", merchant_discount_path(@merchant, discount), method: :delete %>
   </div>
   <hr>
 <% end %>
