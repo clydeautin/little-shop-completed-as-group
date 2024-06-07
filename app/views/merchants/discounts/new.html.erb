@@ -1,6 +1,6 @@
 <h1>New Bulk Discount Page</h1>
 
-<%= form_with url: [@merchant, @merchant.discounts.build], data: { turbo: true }, local: true do |form| %>
+<%= form_with url: "/merchants/#{@merchant.id}/discounts", method: :post, data: { turbo: false }, local: true do |form| %>
   <div>
     <%= form.label :name %>
     <%= form.text_field :name %>

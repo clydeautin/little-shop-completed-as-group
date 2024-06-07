@@ -158,7 +158,7 @@ RSpec.describe "the merchant dashboard page" do
     click_link("View All my Discounts")
 
     expect(page).to have_current_path("/merchants/#{@merchant1.id}/discounts")
-    save_and_open_page
+
     @merchant1.discounts.each do |discount|
       within "#discount-#{discount.id}" do
       expect(page).to have_content("Promo name: #{discount.name}")
