@@ -105,16 +105,16 @@ RSpec.describe "the discount index page" do
     visit "/merchants/#{@merchant1.id}/discounts"
   
     click_link("Create a new bulk discount")
+    expect(page).to have_current_path(new_merchant_discount_path(@merchant1))
   
     fill_in 'Name', with: 'Summer Sale'
     fill_in 'Percentage', with: 168
     fill_in 'Threshold', with: 10
     click_button 'Create Discount'
-    # save_and_open_page
+
     expect(page).to have_content("New Bulk Discount Page")
     expect(page).to have_button("Create Discount")
-
-
+    expect(page).to have_content("Failed to create discount")
   end
   #   3: Merchant Bulk Discount Delete
 

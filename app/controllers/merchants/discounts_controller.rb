@@ -21,7 +21,8 @@ class Merchants::DiscountsController < ApplicationController
     if @discount.save
       redirect_to merchant_discounts_path(@merchant.id)
     else
-      render :new, alert: 'Failed to create discount'
+      flash.now[:alert] = 'Failed to create discount'
+      render :new
     end
   end
 
