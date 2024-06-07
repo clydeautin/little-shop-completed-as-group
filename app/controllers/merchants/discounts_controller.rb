@@ -48,7 +48,8 @@ class Merchants::DiscountsController < ApplicationController
     if @discount.update(discount_params)
       redirect_to merchant_discount_path(@merchant, @discount), notice: 'Discount was successfully edited.'
     else
-      render :edit, alert: 'Failed to update discount'
+      flash.now[:alert] = 'Failed to update discount'
+      render :new
     end
   end
 
