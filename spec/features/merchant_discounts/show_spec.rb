@@ -78,7 +78,7 @@ RSpec.describe "the discount show page" do
   # [x] When I visit my bulk discount show page
   # [x] Then I see the bulk discount's quantity threshold and percentage discount
 
-  it "allows me to create a new bulk discount" do
+  it "allows me to view a bulk discount" do
     visit "/merchants/#{@merchant1.id}/discounts/#{@july4.id}"
 
     # save_and_open_page
@@ -87,4 +87,37 @@ RSpec.describe "the discount show page" do
     expect(page).to have_content("Discount threshold: #{@july4.threshold}")
   end
 
+  #   5: Merchant Bulk Discount Edit
+
+  # As a merchant
+  # [] When I visit my bulk discount show page
+  # [] Then I see a link to edit the bulk discount
+  # [] When I click this link
+  # [] Then I am taken to a new page with a form to edit the discount
+  # [] And I see that the discounts current attributes are pre-poluated in the form
+  # [] When I change any/all of the information and click submit
+  # [] Then I am redirected to the bulk discount's show page
+  # [] And I see that the discount's attributes have been updated
+
+  it "allows me to edit a bulk discount" do
+    visit "/merchants/#{@merchant1.id}/discounts/#{@july4.id}"
+    
+    expect(page).to have_link("Edit Discount")
+    click_link "Edit Discount"
+    # save_and_open_page
+    expect(current_path).to eq("/merchants/#{@merchant1.id}/discounts/#{@july4.id}/edit")
+
+    expect(find_field('Name').value).to eq(@july4.name)
+    expect(find_field('Percentage').value).to eq(@july4.percentage.to_s)
+    expect(find_field('Threshold').value).to eq(@july4.threshold.to_s)
+
+    fill_in 'Name', with: 'American Freedom Day'
+    click_button 'Submit'
+
+    expect(current_path).to eq(merchant_discount_path(@merchant1, @july4))
+    expect(page).to have_content("Discount name: American Freedom Day")
+  end
+
+  # need to test someone can't put in a letter for percentage or threshold
+  # need to test they cant be left blank
 end
