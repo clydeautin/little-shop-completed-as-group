@@ -16,9 +16,13 @@ class Merchants::DiscountsController < ApplicationController
 
   def create
     @merchant = Merchant.find(params[:merchant_id])
-
-    Discount.create(name: params[:name], percentage: params[:percentage], threshold: params[:threshold], merchant: @merchant)
-    redirect_to merchant_discounts_path(@merchant.id)
+    @discount = @merchant.discounts.new(name: params[:name], percentage: params[:percentage], threshold: params[:threshold], merchant: @merchant)
+    # Discount.save(name: params[:name], percentage: params[:percentage], threshold: params[:threshold], merchant: @merchant)
+    if @discount.save
+      redirect_to merchant_discounts_path(@merchant.id)
+    else
+      render :new, alert: 'Failed to create discount'
+    end
   end
 
   def destroy
@@ -39,16 +43,17 @@ class Merchants::DiscountsController < ApplicationController
   def update
     @merchant = Merchant.find(params[:merchant_id])
     @discount = Discount.find(params[:id])
+
     if @discount.update(discount_params)
       redirect_to merchant_discount_path(@merchant, @discount), notice: 'Discount was successfully edited.'
     else
       render :edit, alert: 'Failed to update discount'
     end
   end
-end
 
-private
-
-def discount_params
-  params.require(:discount).permit(:name, :percentage, :threshold)
+  private
+  
+  def discount_params
+    params.require(:discount).permit(:name, :percentage, :threshold)
+  end
 end

@@ -110,7 +110,11 @@ RSpec.describe "the discount index page" do
     fill_in 'Percentage', with: 168
     fill_in 'Threshold', with: 10
     click_button 'Create Discount'
-    save_and_open_page
+    # save_and_open_page
+    expect(page).to have_content("New Bulk Discount Page")
+    expect(page).to have_button("Create Discount")
+
+
   end
   #   3: Merchant Bulk Discount Delete
 
