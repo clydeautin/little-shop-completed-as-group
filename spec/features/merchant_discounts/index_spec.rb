@@ -72,14 +72,43 @@ RSpec.describe "the discount index page" do
 
   end
 
+
+  #   2: Merchant Bulk Discount Create
+
+  # As a merchant
+  # [x]When I visit my bulk discounts index
+  # [x]Then I see a link to create a new discount
+  # [x]When I click this link
+  # [x]Then I am taken to a new page where I see a form to add a new bulk discount
+  # [x]When I fill in the form with valid data
+  # [x]Then I am redirected back to the bulk discount index
+  # [x]And I see my new bulk discount listed
+
+  it "allows me to create a new bulk discount" do
+    visit "/merchants/#{@merchant1.id}/discounts"
+    # save_and_open_page
+    expect(page).to have_link("Create a new bulk discount", href: new_merchant_discount_path(@merchant1))
+    click_link("Create a new bulk discount")
+
+    expect(page).to have_current_path(new_merchant_discount_path(@merchant1))
+    fill_in 'Name', with: 'Summer Sale'
+    fill_in 'Percentage', with: 15
+    fill_in 'Threshold', with: 10
+    click_button 'Create Discount'
+
+    expect(current_path).to eq(merchant_discounts_path(@merchant1))
+
+    expect(page).to have_content("Summer Sale")
+  end
+
   #   3: Merchant Bulk Discount Delete
 
   # As a merchant
-  # [] When I visit my bulk discounts index
-  # [] Then next to each bulk discount I see a button to delete it
-  # [] When I click this button
-  # [] Then I am redirected back to the bulk discounts index page
-  # [] And I no longer see the discount listed
+  # [x] When I visit my bulk discounts index
+  # [x] Then next to each bulk discount I see a button to delete it
+  # [x] When I click this button
+  # [x] Then I am redirected back to the bulk discounts index page
+  # [x] And I no longer see the discount listed
 
   it "allows me to delete a discount" do
     visit merchant_discounts_path(@merchant1)

@@ -72,32 +72,18 @@ RSpec.describe "the discount show page" do
 
   end
 
-  #   2: Merchant Bulk Discount Create
+  # 4: Merchant Bulk Discount Show
 
   # As a merchant
-  # [x]When I visit my bulk discounts index
-  # [x]Then I see a link to create a new discount
-  # [x]When I click this link
-  # [x]Then I am taken to a new page where I see a form to add a new bulk discount
-  # [x]When I fill in the form with valid data
-  # [x]Then I am redirected back to the bulk discount index
-  # [x]And I see my new bulk discount listed
+  # [] When I visit my bulk discount show page
+  # [] Then I see the bulk discount's quantity threshold and percentage discount
 
   it "allows me to create a new bulk discount" do
-    visit "/merchants/#{@merchant1.id}/discounts"
-    # save_and_open_page
-    expect(page).to have_link("Create a new bulk discount", href: new_merchant_discount_path(@merchant1))
-    click_link("Create a new bulk discount")
+    visit "/merchants/#{@merchant1.id}/#{@july4.id}"
 
-    expect(page).to have_current_path(new_merchant_discount_path(@merchant1))
-    fill_in 'Name', with: 'Summer Sale'
-    fill_in 'Percentage', with: 15
-    fill_in 'Threshold', with: 10
-    click_button 'Create Discount'
-
-    expect(current_path).to eq(merchant_discounts_path(@merchant1))
-
-    expect(page).to have_content("Summer Sale")
+    expect(page).to have_content(@july4.name)
+    expect(page).to have_content(@july4.quantity)
+    expect(page).to have_content(@july4.threshold)
   end
 
 end
