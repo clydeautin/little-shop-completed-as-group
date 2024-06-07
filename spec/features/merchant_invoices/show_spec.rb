@@ -162,11 +162,12 @@ RSpec.describe "the merchant dashboard page" do
     @invoice_item25 = FactoryBot.create(:invoice_item, invoice: @invoice19, item: @item25, quantity: 1, unit_price: @item25.unit_price)
   
     @merchant_a = FactoryBot.create(:merchant)
+    @merchant_b = FactoryBot.create(:merchant)
     @item_a = FactoryBot.create(:item, merchant: @merchant_a, unit_price: 2200)
     @item_b = FactoryBot.create(:item, merchant: @merchant_a, unit_price: 2300)
     @item_c = FactoryBot.create(:item, merchant: @merchant_a, unit_price: 3100)
     
-    @merchant_a = FactoryBot.create(:merchant)
+
     @item_e = FactoryBot.create(:item, merchant: @merchant_b, unit_price: 5299)
     
 
@@ -175,13 +176,13 @@ RSpec.describe "the merchant dashboard page" do
     @invoice_item_a = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_a, quantity: 11, unit_price: @item_a.unit_price) # $242 // $169.4
     @invoice_item_b = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_b, quantity: 6, unit_price: @item_b.unit_price) # $138 // $110.4
     @invoice_item_c = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_c, quantity: 2, unit_price: @item_c.unit_price) # $62 Tot= $442 // T = $341.8
-    @invoice_item_c = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_e, quantity: 11, unit_price: @item_e.unit_price)
+    @invoice_item_d = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_e, quantity: 11, unit_price: @item_e.unit_price)
 
-    @july4 = Discount.create!(name: "Loyalty", percentage: 10, threshold: 3, merchant_id: @merchant_a.id)
-    @labor_day = Discount.create!(name: "Silver Loyalty", percentage: 20, threshold: 5, merchant_id: @merchant_a.id)
-    @xmas = Discount.create!(name: "Gold Loyalty", percentage: 30, threshold: 10, merchant_id: @merchant_a.id)
+    @loyalty = Discount.create!(name: "Loyalty", percentage: 10, threshold: 3, merchant_id: @merchant_a.id)
+    @silver_l = Discount.create!(name: "Silver Loyalty", percentage: 20, threshold: 5, merchant_id: @merchant_a.id)
+    @gold_l = Discount.create!(name: "Gold Loyalty", percentage: 30, threshold: 10, merchant_id: @merchant_a.id)
 
-    @xmas = Discount.create!(name: "Summer Discount", percentage: 17, threshold: 14, merchant_id: @merchant_b.id)
+    @summer_disc = Discount.create!(name: "Summer Discount", percentage: 17, threshold: 14, merchant_id: @merchant_b.id)
 
   end
 
