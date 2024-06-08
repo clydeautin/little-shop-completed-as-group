@@ -148,7 +148,7 @@ RSpec.describe Invoice, type: :model do
     @invoice_item6 = FactoryBot.create(:invoice_item, invoice: @invoice3, item: @item6, quantity: 2, unit_price: @item6.unit_price)
     
     @invoice_item7 = FactoryBot.create(:invoice_item, invoice: @invoice4, item: @item7, quantity: 2, unit_price: @item7.unit_price)
-
+    
     @invoice_item8 = FactoryBot.create(:invoice_item, invoice: @invoice5, item: @item8, quantity: 2, unit_price: @item8.unit_price)
     @invoice_item9 = FactoryBot.create(:invoice_item, invoice: @invoice5, item: @item9, quantity: 2, unit_price: @item9.unit_price)
     
@@ -171,29 +171,73 @@ RSpec.describe Invoice, type: :model do
     @invoice_item23 = FactoryBot.create(:invoice_item, invoice: @invoice17, item: @item23, quantity: 1, unit_price: @item23.unit_price)
     @invoice_item24 = FactoryBot.create(:invoice_item, invoice: @invoice18, item: @item24, quantity: 1, unit_price: @item24.unit_price)
     @invoice_item25 = FactoryBot.create(:invoice_item, invoice: @invoice19, item: @item25, quantity: 1, unit_price: @item25.unit_price)
+    
+    @invoice_item26 = FactoryBot.create(:invoice_item, invoice: @invoice1, item: @item11, quantity: 2, unit_price: @item11.unit_price)
+    
+    @merchant_a = FactoryBot.create(:merchant)
+    @merchant_b = FactoryBot.create(:merchant)
+    @item_a = FactoryBot.create(:item, merchant: @merchant_a, unit_price: 2200)
+    @item_b = FactoryBot.create(:item, merchant: @merchant_a, unit_price: 2300)
+    @item_c = FactoryBot.create(:item, merchant: @merchant_a, unit_price: 3100)
+    
+
+    @item_e = FactoryBot.create(:item, merchant: @merchant_b, unit_price: 5299)
+    
+
+    @invoice_a = FactoryBot.create(:invoice, customer: @customer1, status: 1)
+
+    @invoice_item_a = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_a, quantity: 11, unit_price: @item_a.unit_price) # $242 // $169.4
+    @invoice_item_b = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_b, quantity: 6, unit_price: @item_b.unit_price) # $138 // $110.4
+    @invoice_item_c = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_c, quantity: 2, unit_price: @item_c.unit_price) # $62 Tot= $442 // T = $341.8
+    @invoice_item_d = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_e, quantity: 11, unit_price: @item_e.unit_price)
+
+    @loyalty = Discount.create!(name: "Loyalty", percentage: 10, threshold: 3, merchant_id: @merchant_a.id)
+    @silver_l = Discount.create!(name: "Silver Loyalty", percentage: 20, threshold: 5, merchant_id: @merchant_a.id)
+    @gold_l = Discount.create!(name: "Gold Loyalty", percentage: 30, threshold: 10, merchant_id: @merchant_a.id)
+
+    @summer_disc = Discount.create!(name: "Summer Discount", percentage: 17, threshold: 14, merchant_id: @merchant_b.id)
+
   end
 
   describe "instance methods" do
-    it 'can calculate total revenue' do
-      expect(@invoice7.total_revenue).to eq(12900)
+    describe "#total_revenue" do
+      it 'can calculate total revenue' do
+        expect(@invoice7.total_revenue).to eq(12900)
+      end
     end
 
-    it "returns invoices that have items not shipped" do
-      Invoice.all.each do |invoice| 
-        invoice.invoice_items.each do |invoice_item|
-          invoice_item.update(status: "shipped")
-        end
+    describe "#total_revenue_for_merchant" do
+      it 'can calculate total revenue for a specific merchant on an invoice' do
+        expect(@invoice1.total_revenue_for_merchant(@merchant1)).to eq(350)
+        expect(@invoice1.total_revenue_for_merchant(@merchant2)).to eq(4200)
       end
+    end
 
-      incompleted = [@invoice1, @invoice2, @invoice7, @invoice8]
-
-      incompleted.each do |invoice|
-        invoice.invoice_items.each do |invoice_item|
-          invoice_item.update(status: "pending")
-        end
+    describe "#total_discounted_revenue" do
+      it 'can calculate the total discounted revenue for a merchant on an invoices' do
+        expect(@invoice_a.total_discounted_revenue(@merchant_a)).to eq(34180.0)
+        expect(@invoice_a.total_discounted_revenue(@merchant_b)).to eq(58289)
       end
+    end
 
-      expect(Invoice.incomplete).to eq(incompleted)
+    describe "#incomplete" do
+      it "returns invoices that have items not shipped" do
+        Invoice.all.each do |invoice| 
+          invoice.invoice_items.each do |invoice_item|
+            invoice_item.update(status: "shipped")
+          end
+        end
+
+        incompleted = [@invoice1, @invoice2, @invoice7, @invoice8]
+
+        incompleted.each do |invoice|
+          invoice.invoice_items.each do |invoice_item|
+            invoice_item.update(status: "pending")
+          end
+        end
+
+        expect(Invoice.incomplete).to eq(incompleted)
+      end
     end
   end
 end
