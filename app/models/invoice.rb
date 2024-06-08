@@ -16,6 +16,16 @@ class Invoice < ApplicationRecord
   def total_revenue
     invoice_items.sum('unit_price * quantity')
   end
+
+  def total_revenue_for_merchant(merchant)
+    invoice_items.joins(:item).where(items: { merchant_id: merchant.id }).sum('invoice_items.unit_price * invoice_items.quantity')
+  end
+
+  def total_discounted_revenue(merchant)
+    invoice_items.joins(:item).where(items: { merchant_id: merchant.id }).sum do |invoice_item|
+      invoice_item.discounted_price * invoice_item.quantity
+    end
+  end
   
   def self.incomplete
     joins(:invoice_items).where.not(invoice_items: {status: 'shipped'}).order(:created_at).distinct
