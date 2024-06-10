@@ -28,4 +28,11 @@ class InvoiceItem < ApplicationRecord
       unit_price
     end
   end
+
+  def discount?
+    Discount.joins(:merchant)
+            .where(merchants: { id: item.merchant.id })
+            .where('threshold <= ?', quantity)
+            .exists?
+  end
 end

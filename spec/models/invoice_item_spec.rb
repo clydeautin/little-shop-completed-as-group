@@ -61,5 +61,12 @@ RSpec.describe InvoiceItem do
           expect(@invoice_item_c.discounted_price).to eq(3100)
         end
       end
+
+      describe '#discount?' do
+        it 'will return a boolean as to wether an invoice item qualifies for a discount or not' do
+          expect(@invoice_item_a.discount?).to eq(true)
+          expect(@invoice_item_c.discount?).to eq(false)
+        end
+      end
   end
 end

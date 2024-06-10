@@ -252,7 +252,7 @@ RSpec.describe "the merchant dashboard page" do
         visit merchant_invoice_path(@merchant_a, @invoice_a)
 
         within "#invoice-item-#{@invoice_item_a.item.id}" do
-          expect(page).to have_link("Bulk Discount Applied")
+          expect(page).to have_link("Bulk Discount Applied: Gold Loyalty")
         end
 
         within "#invoice-item-#{@invoice_item_c.item.id}" do
