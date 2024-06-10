@@ -246,13 +246,13 @@ RSpec.describe "the merchant dashboard page" do
       #       7: Merchant Invoice Show Page: Link to applied discounts
 
       # As a merchant
-      # []When I visit my merchant invoice show page
-      # []Next to each invoice item I see a link to the show page for the bulk discount that was applied (if any)
+      # [x] When I visit my merchant invoice show page
+      # [x] Next to each invoice item I see a link to the show page for the bulk discount that was applied (if any)
       it "shows links to associated bulk discount for items" do
         visit merchant_invoice_path(@merchant_a, @invoice_a)
 
         within "#invoice-item-#{@invoice_item_a.item.id}" do
-          expect(page).to have_link("Bulk Discount Applied: Gold Loyalty")
+          expect(page).to have_link("Gold Loyalty")
         end
 
         within "#invoice-item-#{@invoice_item_c.item.id}" do
