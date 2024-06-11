@@ -29,9 +29,13 @@ class Merchants::DiscountsController < ApplicationController
   def destroy
     @merchant = Merchant.find(params[:merchant_id])
     @discount = Discount.find(params[:id])
-    @discount.destroy
-
-    redirect_to merchant_discounts_path(@merchant.id), notice: 'Discount was successfully deleted.'
+    
+    if @discount.eligible_and_pending
+    flash[:alert] = "Discount can not be deleted, there are pending invoices assocaited"
+      else
+    flash[:notice] = "Discount was successfully deleted"
+    end
+    redirect_to merchant_discounts_path(@merchant.id)
   end
 
   def edit
