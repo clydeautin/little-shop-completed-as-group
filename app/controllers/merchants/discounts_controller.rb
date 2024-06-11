@@ -43,14 +43,13 @@ class Merchants::DiscountsController < ApplicationController
     @merchant = Merchant.find(params[:merchant_id])
     @discount = Discount.find(params[:id])
     
-    # # redirect_to merchant_discount_path(@merchant.id, @discount.id), notice: 'Discount was successfully edited.'
   end
   
   def update
     @merchant = Merchant.find(params[:merchant_id])
     @discount = Discount.find(params[:id])
 
-    if @discount.update(discount_params)
+    if @discount.update(discount_params) && @discount.eligible_and_pending? == false
       redirect_to merchant_discount_path(@merchant, @discount), notice: 'Discount was successfully edited.'
     else
       flash.now[:alert] = 'Failed to update discount'

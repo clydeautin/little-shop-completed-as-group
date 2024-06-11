@@ -182,10 +182,11 @@ RSpec.describe Discount do
     @item_c = FactoryBot.create(:item, merchant: @merchant_a, unit_price: 3100)
     
 
-    @item_e = FactoryBot.create(:item, merchant: @merchant_b, unit_price: 5200)
+    @item_e = FactoryBot.create(:item, merchant: @merchant_b, unit_price: 5299)
     
 
     @invoice_a = FactoryBot.create(:invoice, customer: @customer1, status: 1)
+    @invoice_b = FactoryBot.create(:invoice, customer: @customer1, status: 2)
 
     @invoice_item_a = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_a, quantity: 11, unit_price: @item_a.unit_price, status: 0) # $242 // $169.4 // d = 72.6
     @invoice_item_b = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_b, quantity: 6, unit_price: @item_b.unit_price) # $138 // $110.4 // d = 27.6
@@ -197,9 +198,9 @@ RSpec.describe Discount do
     @loyalty = Discount.create!(name: "Loyalty", percentage: 10, threshold: 3, merchant_id: @merchant_a.id)
     @silver_l = Discount.create!(name: "Silver Loyalty", percentage: 20, threshold: 5, merchant_id: @merchant_a.id)
     @gold_l = Discount.create!(name: "Gold Loyalty", percentage: 30, threshold: 10, merchant_id: @merchant_a.id)
+    @plat_l = Discount.create!(name: "Platinum Loyalty", percentage: 35, threshold: 20, merchant_id: @merchant_a.id)
 
-    @summer_disc = Discount.create!(name: "Summer Discount", percentage: 10, threshold: 3, merchant_id: @merchant_b.id)
-    @winter_disc = Discount.create!(name: "Winter Discount", percentage: 10, threshold: 50, merchant_id: @merchant_b.id)
+    @summer_disc = Discount.create!(name: "Summer Discount", percentage: 17, threshold: 14, merchant_id: @merchant_b.id)
 
   end
 

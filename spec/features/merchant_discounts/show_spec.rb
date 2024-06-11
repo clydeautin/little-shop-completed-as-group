@@ -168,10 +168,11 @@ RSpec.describe "the discount show page" do
     @item_c = FactoryBot.create(:item, merchant: @merchant_a, unit_price: 3100)
     
 
-    @item_e = FactoryBot.create(:item, merchant: @merchant_b, unit_price: 5200)
+    @item_e = FactoryBot.create(:item, merchant: @merchant_b, unit_price: 5299)
     
 
     @invoice_a = FactoryBot.create(:invoice, customer: @customer1, status: 1)
+    @invoice_b = FactoryBot.create(:invoice, customer: @customer1, status: 2)
 
     @invoice_item_a = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_a, quantity: 11, unit_price: @item_a.unit_price, status: 0) # $242 // $169.4 // d = 72.6
     @invoice_item_b = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_b, quantity: 6, unit_price: @item_b.unit_price) # $138 // $110.4 // d = 27.6
@@ -183,9 +184,9 @@ RSpec.describe "the discount show page" do
     @loyalty = Discount.create!(name: "Loyalty", percentage: 10, threshold: 3, merchant_id: @merchant_a.id)
     @silver_l = Discount.create!(name: "Silver Loyalty", percentage: 20, threshold: 5, merchant_id: @merchant_a.id)
     @gold_l = Discount.create!(name: "Gold Loyalty", percentage: 30, threshold: 10, merchant_id: @merchant_a.id)
+    @plat_l = Discount.create!(name: "Platinum Loyalty", percentage: 35, threshold: 20, merchant_id: @merchant_a.id)
 
-    @summer_disc = Discount.create!(name: "Summer Discount", percentage: 10, threshold: 3, merchant_id: @merchant_b.id)
-    @winter_disc = Discount.create!(name: "Winter Discount", percentage: 10, threshold: 50, merchant_id: @merchant_b.id)
+    @summer_disc = Discount.create!(name: "Summer Discount", percentage: 17, threshold: 14, merchant_id: @merchant_b.id)
 
   end
   # 4: Merchant Bulk Discount Show
@@ -195,7 +196,7 @@ RSpec.describe "the discount show page" do
   # [x] Then I see the bulk discount's quantity threshold and percentage discount
 
   it "allows me to view a bulk discount" do
-    visit "/merchants/#{@merchant1.id}/discounts/#{@gold_l.id}"
+    visit "/merchants/#{@merchant_a.id}/discounts/#{@gold_l.id}"
 
     # save_and_open_page
     expect(page).to have_content("Discount name: #{@gold_l.name}")
@@ -216,31 +217,31 @@ RSpec.describe "the discount show page" do
   # [x] And I see that the discount's attributes have been updated
 
   it "allows me to edit a bulk discount" do
-    visit "/merchants/#{@merchant1.id}/discounts/#{@gold_l.id}"
+    visit "/merchants/#{@merchant_a.id}/discounts/#{@plat_l.id}"
     
     expect(page).to have_link("Edit Discount")
     click_link "Edit Discount"
     # save_and_open_page
-    expect(current_path).to eq("/merchants/#{@merchant1.id}/discounts/#{@gold_l.id}/edit")
+    expect(current_path).to eq("/merchants/#{@merchant_a.id}/discounts/#{@plat_l.id}/edit")
 
-    expect(find_field('Name').value).to eq(@gold_l.name)
-    expect(find_field('Percentage').value).to eq(@gold_l.percentage.to_s)
-    expect(find_field('Threshold').value).to eq(@gold_l.threshold.to_s)
+    expect(find_field('Name').value).to eq(@plat_l.name)
+    expect(find_field('Percentage').value).to eq(@plat_l.percentage.to_s)
+    expect(find_field('Threshold').value).to eq(@plat_l.threshold.to_s)
 
     fill_in 'Name', with: 'American Freedom Day'
     click_button 'Submit'
 
-    expect(current_path).to eq(merchant_discount_path(@merchant1, @gold_l))
+    expect(current_path).to eq(merchant_discount_path(@merchant_a, @plat_l))
     expect(page).to have_content("Discount name: American Freedom Day")
   end
 
   it "wont save a bulk discount if I leave a field blank" do
-    visit "/merchants/#{@merchant1.id}/discounts/#{@gold_l.id}"
-    save_and_open_page
+    visit "/merchants/#{@merchant_a.id}/discounts/#{@gold_l.id}"
+
     expect(page).to have_link("Edit Discount")
     click_link "Edit Discount"
-    # save_and_open_page
-    expect(current_path).to eq("/merchants/#{@merchant1.id}/discounts/#{@gold_l.id}/edit")
+
+    expect(current_path).to eq("/merchants/#{@merchant_a.id}/discounts/#{@gold_l.id}/edit")
 
     expect(find_field('Name').value).to eq(@gold_l.name)
     expect(find_field('Percentage').value).to eq(@gold_l.percentage.to_s)
@@ -253,7 +254,11 @@ RSpec.describe "the discount show page" do
   end
 
   it "when an invoice is pending merchant can't edit a bulk discount that applies to any of their items on that invoice" do
-    visit "/merchants/#{@merchant1.id}/discounts/#{@gold_l.id}"
-    # save_and_open_page
+    visit "/merchants/#{@merchant_a.id}/discounts/#{@gold_l.id}"
+    click_link "Edit Discount"
+
+    fill_in 'Name', with: 'American Freedom Day'
+    click_button 'Submit'
+    expect(page).to have_content("Failed to update discount")
   end
 end
