@@ -4,10 +4,10 @@ RSpec.describe Invoice, type: :model do
   
   describe "relationships" do
     it {should belong_to :customer}
-    it {should have_many :transactions}
     it {should have_many :invoice_items}
     it {should have_many(:items).through(:invoice_items)}
     it {should have_many(:merchants).through(:items)}
+    it {should have_many :transactions}
   end
 
   describe "validations" do
@@ -208,6 +208,12 @@ RSpec.describe Invoice, type: :model do
       end
     end
 
+    describe "#total_discount" do
+      it "returns the total discount for all items from every merchant on a customer's invoice" do
+        expect(@invoice_a.total_discount).to eq(57580)
+      end
+    end
+
     describe "#total_revenue_for_merchant" do
       it 'can calculate total revenue for a specific merchant on an invoice' do
         expect(@invoice1.total_revenue_for_merchant(@merchant1)).to eq(350)
@@ -239,13 +245,6 @@ RSpec.describe Invoice, type: :model do
         end
 
         expect(Invoice.incomplete).to eq(incompleted)
-      end
-    end
-
-    describe "#total_discount" do
-      it "returns the total discount for all items from every merchant on a customer's invoice" do
-        
-        expect(@invoice_a.total_discount).to eq(57580)
       end
     end
   end

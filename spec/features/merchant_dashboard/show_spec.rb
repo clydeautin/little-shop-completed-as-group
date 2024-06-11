@@ -73,20 +73,20 @@ RSpec.describe "the merchant dashboard page" do
   end
 
   it "displays the name of the merchant" do
-    visit "/merchants/#{@merchant.id}/dashboard"
+    visit merchant_dashboard_path(@merchant) #"/merchants/#{@merchant.id}/dashboard"
 
     expect(page).to have_content(@merchant.name)
   end
 
   it "has links for merchant items index and merchant invoices index" do
-    visit "/merchants/#{@merchant.id}/dashboard"
+    visit merchant_dashboard_path(@merchant.id) #"/merchants/#{@merchant.id}/dashboard"
 
     expect(page).to have_link("Items Index")
     expect(page).to have_link("Invoices Index")
   end
 
   it "has top 5 customer names each with successful transaction count with merchant" do
-    visit "/merchants/#{@merchant.id}/dashboard"
+    visit merchant_dashboard_path(@merchant.id) #"/merchants/#{@merchant.id}/dashboard"
     @top_five_customers = @merchant.top_five_customers
 
     within "#favorite_customers" do
@@ -97,7 +97,7 @@ RSpec.describe "the merchant dashboard page" do
   end
 
   it "has list of all items name each with its invoice id as a link to merchant invoice show page" do
-    visit "/merchants/#{@merchant.id}/dashboard"
+    visit merchant_dashboard_path(@merchant.id) #"/merchants/#{@merchant.id}/dashboard"
 
     within "#items_ready_to_ship" do
       expect(page).to have_content("#{@item1.name} - Invoice ##{@invoice1.id} - #{@invoice1.created_at.strftime("%A, %B %d, %Y")}")
@@ -131,7 +131,7 @@ RSpec.describe "the merchant dashboard page" do
     @invoice6.save
     @invoice7.created_at = "2022-01-23 00:00:00"
     @invoice7.save
-    visit "/merchants/#{@merchant.id}/dashboard"
+    visit merchant_dashboard_path(@merchant.id) #"/merchants/#{@merchant.id}/dashboard"
 
     within "#items_ready_to_ship" do
       expect("Invoice ##{@invoice3.id}").to appear_before("Invoice ##{@invoice1.id}", only_text: true)
@@ -152,7 +152,7 @@ RSpec.describe "the merchant dashboard page" do
 
   it 'has a link to bulk discount index' do
 
-    visit "/merchants/#{@merchant1.id}/dashboard"
+    visit merchant_dashboard_path(@merchant1.id) #"/merchants/#{@merchant.id}/dashboard"
 
     expect(page).to have_link("View All my Discounts", href: merchant_discounts_path(@merchant1.id))
     click_link("View All my Discounts")
