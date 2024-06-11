@@ -1,19 +1,20 @@
 require "rails_helper"
 
-RSpec.describe Invoice, type: :model do
-  
-  describe "relationships" do
-    it {should belong_to :customer}
-    it {should have_many :invoice_items}
-    it {should have_many(:items).through(:invoice_items)}
-    it {should have_many(:merchants).through(:items)}
-    it {should have_many :transactions}
-  end
+RSpec.describe Discount do
 
   describe "validations" do
-    it {should validate_presence_of :status}
-  end
+    it {should validate_presence_of :name}
+    it {should validate_presence_of :percentage}
+    it { should validate_numericality_of(:percentage).only_integer.is_greater_than_or_equal_to(1).is_less_than_or_equal_to(100) }
+    it { should validate_presence_of :threshold }
+    it { should validate_numericality_of(:threshold).only_integer.is_greater_than_or_equal_to(0) }
   
+  end
+
+  describe "relationships" do
+    it {should belong_to :merchant}
+  end
+
   before(:each) do
     #budget merchant
     @merchant1 = FactoryBot.create(:merchant)
@@ -181,12 +182,13 @@ RSpec.describe Invoice, type: :model do
     @item_c = FactoryBot.create(:item, merchant: @merchant_a, unit_price: 3100)
     
 
-    @item_e = FactoryBot.create(:item, merchant: @merchant_b, unit_price: 5200)
+    @item_e = FactoryBot.create(:item, merchant: @merchant_b, unit_price: 5299)
     
 
     @invoice_a = FactoryBot.create(:invoice, customer: @customer1, status: 1)
+    @invoice_b = FactoryBot.create(:invoice, customer: @customer1, status: 2)
 
-    @invoice_item_a = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_a, quantity: 11, unit_price: @item_a.unit_price) # $242 // $169.4 // d = 72.6
+    @invoice_item_a = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_a, quantity: 11, unit_price: @item_a.unit_price, status: 0) # $242 // $169.4 // d = 72.6
     @invoice_item_b = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_b, quantity: 6, unit_price: @item_b.unit_price) # $138 // $110.4 // d = 27.6
     @invoice_item_c = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_c, quantity: 2, unit_price: @item_c.unit_price) # $62 Tot= $442 //  // T = $341.8
     @invoice_item_d = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_e, quantity: 5, unit_price: @item_e.unit_price) #$52 Tot= $260 // $234 // d =26  // T = $234 //
@@ -196,55 +198,25 @@ RSpec.describe Invoice, type: :model do
     @loyalty = Discount.create!(name: "Loyalty", percentage: 10, threshold: 3, merchant_id: @merchant_a.id)
     @silver_l = Discount.create!(name: "Silver Loyalty", percentage: 20, threshold: 5, merchant_id: @merchant_a.id)
     @gold_l = Discount.create!(name: "Gold Loyalty", percentage: 30, threshold: 10, merchant_id: @merchant_a.id)
+    @plat_l = Discount.create!(name: "Platinum Loyalty", percentage: 35, threshold: 20, merchant_id: @merchant_a.id)
 
-    @summer_disc = Discount.create!(name: "Summer Discount", percentage: 10, threshold: 4, merchant_id: @merchant_b.id)
+    @summer_disc = Discount.create!(name: "Summer Discount", percentage: 17, threshold: 50, merchant_id: @merchant_b.id)
 
   end
 
-  describe "instance methods" do
-    describe "#total_revenue" do
-      it 'can calculate total revenue' do
-        expect(@invoice7.total_revenue).to eq(12900)
+  describe "methods" do
+    describe "#eligible_invoice_items" do
+      it 'determines if a discount has any invoice items that meet its critieria' do
+      expect(@gold_l.eligible_invoice_items).to include(@invoice_item_a)
+      expect(@gold_l.eligible_invoice_items).to_not include(@invoice_item_c)
+      expect(@silver_l.eligible_invoice_items).to include(@invoice_item_b)
       end
     end
 
-    describe "#total_discount" do
-      it "returns the total discount for all items from every merchant on a customer's invoice" do
-        expect(@invoice_a.total_discount).to eq(57580)
-      end
-    end
-
-    describe "#total_revenue_for_merchant" do
-      it 'can calculate total revenue for a specific merchant on an invoice' do
-        expect(@invoice1.total_revenue_for_merchant(@merchant1)).to eq(350)
-        expect(@invoice1.total_revenue_for_merchant(@merchant2)).to eq(4200)
-      end
-    end
-
-    describe "#total_discounted_revenue_for_merchant" do
-      it 'can calculate the total discounted revenue for a merchant on an invoices' do
-        expect(@invoice_a.total_discounted_revenue_for_merchant(@merchant_a)).to eq(34180.0)
-        expect(@invoice_a.total_discounted_revenue_for_merchant(@merchant_b)).to eq(23400)
-      end
-    end
-
-    describe "#incomplete" do
-      it "returns invoices that have items not shipped" do
-        Invoice.all.each do |invoice| 
-          invoice.invoice_items.each do |invoice_item|
-            invoice_item.update(status: "shipped")
-          end
-        end
-
-        incompleted = [@invoice1, @invoice2, @invoice7, @invoice8]
-
-        incompleted.each do |invoice|
-          invoice.invoice_items.each do |invoice_item|
-            invoice_item.update(status: "pending")
-          end
-        end
-
-        expect(Invoice.incomplete).to eq(incompleted)
+    describe "#no_pending_invoice_items" do
+      it " will determine if a discouunt has invoice items that are eligible for discount and in pending status" do
+        expect(@gold_l.eligible_and_pending?).to eq(true)
+        expect(@summer_disc.eligible_and_pending?).to eq(false)
       end
     end
   end

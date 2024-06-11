@@ -7,22 +7,25 @@ Rails.application.routes.draw do
   root 'welcome#index' 
 
   resources :merchants, only: [:index] do
-    resources :dashboard, only: [:index], action: :show, controller: 'merchants/dashboard'
+    get 'dashboard', to: 'merchants/dashboard#show', as: 'dashboard'
     resources :invoices, only: [:index, :show], controller: 'merchants/invoices'
-    resources :items, only: [:index, :show, :edit, :new, :create], controller: 'merchants/items'
+    # resources :items, only: [:index, :show, :edit, :new, :create], controller: 'merchants/items'
+    resources :items, except: [:destroy, :update], controller: 'merchants/items'
     resources :invoice_items, only: [:update]
+    resources :discounts, controller: 'merchants/discounts'
   end
 
-  patch "/merchants/:merchant_id/invoices/:id", to: "invoice_items#update"
   patch "/merchants/:merchant_id/items/:id", to: "merchants/items#update", as: "merchant_item_update"
 
   resources :admin, only: :index
 
   namespace :admin do
-    resources :merchants, only: [:index, :show, :edit, :new, :create]
+    # resources :merchants, only: [:index, :show, :edit, :new, :create]
+    resources :merchants, except: [:destroy, :update]
     resources :invoices, only: [:index, :show]
+    resources :invoice_items, only: [:update]
   end
 
-  patch "/admin/invoice_items/:id", to: "admin/invoice_items#update"
+  # patch "/admin/invoice_items/:id", to: "admin/invoice_items#update"
   patch "/admin/merchants/:id", to: "admin/merchants#update", as: "admin_merchant_update"
 end

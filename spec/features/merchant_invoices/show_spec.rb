@@ -88,7 +88,7 @@ RSpec.describe "the merchant dashboard page" do
 
     @invoice17 = FactoryBot.create(:invoice, customer: @customer5, status: 1)
     @invoice18 = FactoryBot.create(:invoice, customer: @customer5, status: 1)
- 
+
     @invoices_tier2 = [
     @invoice19 = FactoryBot.create(:invoice, customer: @customer6, status: 1),
 
@@ -161,6 +161,29 @@ RSpec.describe "the merchant dashboard page" do
     @invoice_item24 = FactoryBot.create(:invoice_item, invoice: @invoice18, item: @item24, quantity: 1, unit_price: @item24.unit_price)
     @invoice_item25 = FactoryBot.create(:invoice_item, invoice: @invoice19, item: @item25, quantity: 1, unit_price: @item25.unit_price)
   
+    @merchant_a = FactoryBot.create(:merchant)
+    @merchant_b = FactoryBot.create(:merchant)
+    @item_a = FactoryBot.create(:item, merchant: @merchant_a, unit_price: 2200)
+    @item_b = FactoryBot.create(:item, merchant: @merchant_a, unit_price: 2300)
+    @item_c = FactoryBot.create(:item, merchant: @merchant_a, unit_price: 3100)
+    
+
+    @item_e = FactoryBot.create(:item, merchant: @merchant_b, unit_price: 5299)
+    
+
+    @invoice_a = FactoryBot.create(:invoice, customer: @customer1, status: 1)
+
+    @invoice_item_a = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_a, quantity: 11, unit_price: @item_a.unit_price) # $242 // $169.4
+    @invoice_item_b = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_b, quantity: 6, unit_price: @item_b.unit_price) # $138 // $110.4
+    @invoice_item_c = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_c, quantity: 2, unit_price: @item_c.unit_price) # $62 Tot= $442 // T = $341.8
+    @invoice_item_d = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_e, quantity: 11, unit_price: @item_e.unit_price)
+
+    @loyalty = Discount.create!(name: "Loyalty", percentage: 10, threshold: 3, merchant_id: @merchant_a.id)
+    @silver_l = Discount.create!(name: "Silver Loyalty", percentage: 20, threshold: 5, merchant_id: @merchant_a.id)
+    @gold_l = Discount.create!(name: "Gold Loyalty", percentage: 30, threshold: 10, merchant_id: @merchant_a.id)
+
+    @summer_disc = Discount.create!(name: "Summer Discount", percentage: 17, threshold: 14, merchant_id: @merchant_b.id)
+
   end
 
   describe "as a merchant" do
@@ -207,7 +230,35 @@ RSpec.describe "the merchant dashboard page" do
           expect(page).to have_selector('p', text: 'Shipped')
         end
       end
+
+      it 'shows the total revenue including discounts' do
+        # US 6
+        # As a merchant
+        # [x] When I visit my merchant invoice show page
+        # [x] Then I see the total revenue for my merchant from this invoice (not including discounts)
+        # [x] And I see the total discounted revenue for my merchant from this invoice which includes bulk discounts in the calculation
+        visit merchant_invoice_path(@merchant_a, @invoice_a)
+
+        expect(page).to have_content("Total Invoice Revenue: $442.0")
+        expect(page).to have_content("Total Discounted Revenue: $341.8")
+      end
+
+      #       7: Merchant Invoice Show Page: Link to applied discounts
+
+      # As a merchant
+      # [x] When I visit my merchant invoice show page
+      # [x] Next to each invoice item I see a link to the show page for the bulk discount that was applied (if any)
+      it "shows links to associated bulk discount for items" do
+        visit merchant_invoice_path(@merchant_a, @invoice_a)
+
+        within "#invoice-item-#{@invoice_item_a.item.id}" do
+          expect(page).to have_link("Gold Loyalty")
+        end
+
+        within "#invoice-item-#{@invoice_item_c.item.id}" do
+          expect(page).to_not have_content("Bulk Discount Applied")
+        end
+      end
     end
   end
-
 end

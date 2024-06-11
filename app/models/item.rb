@@ -13,6 +13,7 @@ class Item < ApplicationRecord
   has_many :invoice_items
   has_many :invoices, through: :invoice_items
   has_many :transactions, through: :invoice_items
+  has_many :discounts, through: :merchant
 
   def best_day
     invoice_items.joins(:transactions)

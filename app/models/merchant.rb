@@ -12,6 +12,7 @@ class Merchant < ApplicationRecord
   has_many :invoices, through: :items
   has_many :transactions, through: :items
   has_many :customers, through: :invoices
+  has_many :discounts
 
   def top_five_customers
     @transaction_ids = transactions.pluck(:id)
@@ -76,5 +77,9 @@ class Merchant < ApplicationRecord
       .order('sum(invoice_items.quantity) desc')
       .limit(1)
       .pluck('invoices.created_at')[0]
+  end
+
+  def self.merchants_with_discounts
+    joins(:discounts).distinct
   end
 end

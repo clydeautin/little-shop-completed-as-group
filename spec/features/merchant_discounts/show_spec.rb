@@ -1,19 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Invoice, type: :model do
-  
-  describe "relationships" do
-    it {should belong_to :customer}
-    it {should have_many :invoice_items}
-    it {should have_many(:items).through(:invoice_items)}
-    it {should have_many(:merchants).through(:items)}
-    it {should have_many :transactions}
-  end
-
-  describe "validations" do
-    it {should validate_presence_of :status}
-  end
-  
+RSpec.describe "the discount show page" do
   before(:each) do
     #budget merchant
     @merchant1 = FactoryBot.create(:merchant)
@@ -181,12 +168,13 @@ RSpec.describe Invoice, type: :model do
     @item_c = FactoryBot.create(:item, merchant: @merchant_a, unit_price: 3100)
     
 
-    @item_e = FactoryBot.create(:item, merchant: @merchant_b, unit_price: 5200)
+    @item_e = FactoryBot.create(:item, merchant: @merchant_b, unit_price: 5299)
     
 
     @invoice_a = FactoryBot.create(:invoice, customer: @customer1, status: 1)
+    @invoice_b = FactoryBot.create(:invoice, customer: @customer1, status: 2)
 
-    @invoice_item_a = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_a, quantity: 11, unit_price: @item_a.unit_price) # $242 // $169.4 // d = 72.6
+    @invoice_item_a = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_a, quantity: 11, unit_price: @item_a.unit_price, status: 0) # $242 // $169.4 // d = 72.6
     @invoice_item_b = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_b, quantity: 6, unit_price: @item_b.unit_price) # $138 // $110.4 // d = 27.6
     @invoice_item_c = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_c, quantity: 2, unit_price: @item_c.unit_price) # $62 Tot= $442 //  // T = $341.8
     @invoice_item_d = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_e, quantity: 5, unit_price: @item_e.unit_price) #$52 Tot= $260 // $234 // d =26  // T = $234 //
@@ -196,56 +184,79 @@ RSpec.describe Invoice, type: :model do
     @loyalty = Discount.create!(name: "Loyalty", percentage: 10, threshold: 3, merchant_id: @merchant_a.id)
     @silver_l = Discount.create!(name: "Silver Loyalty", percentage: 20, threshold: 5, merchant_id: @merchant_a.id)
     @gold_l = Discount.create!(name: "Gold Loyalty", percentage: 30, threshold: 10, merchant_id: @merchant_a.id)
+    @plat_l = Discount.create!(name: "Platinum Loyalty", percentage: 35, threshold: 20, merchant_id: @merchant_a.id)
 
-    @summer_disc = Discount.create!(name: "Summer Discount", percentage: 10, threshold: 4, merchant_id: @merchant_b.id)
+    @summer_disc = Discount.create!(name: "Summer Discount", percentage: 17, threshold: 14, merchant_id: @merchant_b.id)
 
   end
+  # 4: Merchant Bulk Discount Show
 
-  describe "instance methods" do
-    describe "#total_revenue" do
-      it 'can calculate total revenue' do
-        expect(@invoice7.total_revenue).to eq(12900)
-      end
-    end
+  # As a merchant
+  # [x] When I visit my bulk discount show page
+  # [x] Then I see the bulk discount's quantity threshold and percentage discount
 
-    describe "#total_discount" do
-      it "returns the total discount for all items from every merchant on a customer's invoice" do
-        expect(@invoice_a.total_discount).to eq(57580)
-      end
-    end
+  it "allows me to view a bulk discount" do
+    visit "/merchants/#{@merchant_a.id}/discounts/#{@gold_l.id}"
 
-    describe "#total_revenue_for_merchant" do
-      it 'can calculate total revenue for a specific merchant on an invoice' do
-        expect(@invoice1.total_revenue_for_merchant(@merchant1)).to eq(350)
-        expect(@invoice1.total_revenue_for_merchant(@merchant2)).to eq(4200)
-      end
-    end
+    expect(page).to have_content("Discount name: #{@gold_l.name}")
+    expect(page).to have_content("Discount percentage: #{@gold_l.percentage}")
+    expect(page).to have_content("Discount threshold: #{@gold_l.threshold}")
+  end
 
-    describe "#total_discounted_revenue_for_merchant" do
-      it 'can calculate the total discounted revenue for a merchant on an invoices' do
-        expect(@invoice_a.total_discounted_revenue_for_merchant(@merchant_a)).to eq(34180.0)
-        expect(@invoice_a.total_discounted_revenue_for_merchant(@merchant_b)).to eq(23400)
-      end
-    end
+  #   5: Merchant Bulk Discount Edit
 
-    describe "#incomplete" do
-      it "returns invoices that have items not shipped" do
-        Invoice.all.each do |invoice| 
-          invoice.invoice_items.each do |invoice_item|
-            invoice_item.update(status: "shipped")
-          end
-        end
+  # As a merchant
+  # [x] When I visit my bulk discount show page
+  # [x] Then I see a link to edit the bulk discount
+  # [x] When I click this link
+  # [x] Then I am taken to a new page with a form to edit the discount
+  # [x] And I see that the discounts current attributes are pre-poluated in the form
+  # [x] When I change any/all of the information and click submit
+  # [x] Then I am redirected to the bulk discount's show page
+  # [x] And I see that the discount's attributes have been updated
 
-        incompleted = [@invoice1, @invoice2, @invoice7, @invoice8]
+  it "allows me to edit a bulk discount" do
+    visit "/merchants/#{@merchant_a.id}/discounts/#{@plat_l.id}"
+    
+    expect(page).to have_link("Edit Discount")
+    click_link "Edit Discount"
 
-        incompleted.each do |invoice|
-          invoice.invoice_items.each do |invoice_item|
-            invoice_item.update(status: "pending")
-          end
-        end
+    expect(current_path).to eq("/merchants/#{@merchant_a.id}/discounts/#{@plat_l.id}/edit")
 
-        expect(Invoice.incomplete).to eq(incompleted)
-      end
-    end
+    expect(find_field('Name').value).to eq(@plat_l.name)
+    expect(find_field('Percentage').value).to eq(@plat_l.percentage.to_s)
+    expect(find_field('Threshold').value).to eq(@plat_l.threshold.to_s)
+
+    fill_in 'Name', with: 'American Freedom Day'
+    click_button 'Submit'
+
+    expect(current_path).to eq(merchant_discount_path(@merchant_a, @plat_l))
+    expect(page).to have_content("Discount name: American Freedom Day")
+  end
+
+  it "wont save a bulk discount if I leave a field blank" do
+    visit "/merchants/#{@merchant_a.id}/discounts/#{@gold_l.id}"
+
+    expect(page).to have_link("Edit Discount")
+    click_link "Edit Discount"
+
+    expect(current_path).to eq("/merchants/#{@merchant_a.id}/discounts/#{@gold_l.id}/edit")
+
+    expect(find_field('Name').value).to eq(@gold_l.name)
+    expect(find_field('Percentage').value).to eq(@gold_l.percentage.to_s)
+    expect(find_field('Threshold').value).to eq(@gold_l.threshold.to_s)
+
+    fill_in 'Name', with: ''
+    click_button 'Submit'
+    expect(page).to have_content("Failed to update discount")
+  end
+
+  it "when an invoice is pending merchant can't edit a bulk discount that applies to any of their items on that invoice" do
+    visit "/merchants/#{@merchant_a.id}/discounts/#{@gold_l.id}"
+    click_link "Edit Discount"
+
+    fill_in 'Name', with: 'American Freedom Day'
+    click_button 'Submit'
+    expect(page).to have_content("Failed to update discount")
   end
 end
