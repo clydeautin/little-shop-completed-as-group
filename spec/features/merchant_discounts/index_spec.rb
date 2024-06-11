@@ -204,7 +204,7 @@ RSpec.describe "the discount index page" do
 
   it "allows me to create a new bulk discount" do
     visit "/merchants/#{@merchant1.id}/discounts"
-    # save_and_open_page
+
     expect(page).to have_link("Create a new bulk discount", href: new_merchant_discount_path(@merchant1))
     click_link("Create a new bulk discount")
 
@@ -216,7 +216,10 @@ RSpec.describe "the discount index page" do
 
     expect(current_path).to eq(merchant_discounts_path(@merchant1))
 
-    expect(page).to have_content("Summer Sale")
+    expect(page).to have_content("Promo name: Summer Sale")
+    expect(page).to have_content("Discount percentage: 15%")
+    expect(page).to have_content("Quantity threshold: 10")
+
   end
 
   it "prevents me from creating a discount with  anything but a number within 1 and 99 for percentage" do

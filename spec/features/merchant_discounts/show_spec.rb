@@ -198,7 +198,6 @@ RSpec.describe "the discount show page" do
   it "allows me to view a bulk discount" do
     visit "/merchants/#{@merchant_a.id}/discounts/#{@gold_l.id}"
 
-    # save_and_open_page
     expect(page).to have_content("Discount name: #{@gold_l.name}")
     expect(page).to have_content("Discount percentage: #{@gold_l.percentage}")
     expect(page).to have_content("Discount threshold: #{@gold_l.threshold}")
@@ -221,7 +220,7 @@ RSpec.describe "the discount show page" do
     
     expect(page).to have_link("Edit Discount")
     click_link "Edit Discount"
-    # save_and_open_page
+
     expect(current_path).to eq("/merchants/#{@merchant_a.id}/discounts/#{@plat_l.id}/edit")
 
     expect(find_field('Name').value).to eq(@plat_l.name)
@@ -250,7 +249,6 @@ RSpec.describe "the discount show page" do
     fill_in 'Name', with: ''
     click_button 'Submit'
     expect(page).to have_content("Failed to update discount")
-
   end
 
   it "when an invoice is pending merchant can't edit a bulk discount that applies to any of their items on that invoice" do
