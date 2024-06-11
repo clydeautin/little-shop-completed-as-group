@@ -3,7 +3,9 @@
 ER Diagram
 <img width="1253" alt="Screenshot 2024-06-06 at 3 35 04 PM" src="https://github.com/clydeautin/little-shop-completed-as-group/assets/15273149/1385d3d8-d896-4b8f-9b75-53f5ab2320eb">
 
-==============================================
+[Bulk Discounts Project Eval](https://backend.turing.edu/module2/projects/bulk_discounts/)
+
+<hr>
 
 ## Requirements
 - Must use Rails 7.1.x, Ruby 3.2.2
