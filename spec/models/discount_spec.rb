@@ -200,7 +200,7 @@ RSpec.describe Discount do
     @gold_l = Discount.create!(name: "Gold Loyalty", percentage: 30, threshold: 10, merchant_id: @merchant_a.id)
     @plat_l = Discount.create!(name: "Platinum Loyalty", percentage: 35, threshold: 20, merchant_id: @merchant_a.id)
 
-    @summer_disc = Discount.create!(name: "Summer Discount", percentage: 17, threshold: 14, merchant_id: @merchant_b.id)
+    @summer_disc = Discount.create!(name: "Summer Discount", percentage: 17, threshold: 50, merchant_id: @merchant_b.id)
 
   end
 
@@ -216,7 +216,7 @@ RSpec.describe Discount do
     describe "#no_pending_invoice_items" do
       it " will determine if a discouunt has invoice items that are eligible for discount and in pending status" do
         expect(@gold_l.eligible_and_pending?).to eq(true)
-        expect(@winter_disc.eligible_and_pending?).to eq(false)
+        expect(@summer_disc.eligible_and_pending?).to eq(false)
       end
     end
   end

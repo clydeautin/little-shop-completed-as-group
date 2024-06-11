@@ -31,6 +31,13 @@ class Invoice < ApplicationRecord
   end
 
   def total_discounted_revenue_for_merchant(merchant)
+    # invoice_items.joins(item: :merchant)
+    #               .joins('LEFT JOIN discounts ON discounts.merchant_id = items.merchant_id AND invoice_items.quantity >= discounts.threshold')
+    #               .where(items: { merchant_id: merchant.id })
+    #               .group('invoice_items.id, discounts.percentage')
+    #               .sum('invoice_items.unit_price * invoice_items.quantity * (1 - COALESCE(discounts.percentage, 0) /100.00)')
+    #               .values
+    #               .sum
     invoice_items.joins(:item).where(items: { merchant_id: merchant.id }).sum do |invoice_item|
       invoice_item.discounted_price * invoice_item.quantity
     end

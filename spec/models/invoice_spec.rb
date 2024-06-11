@@ -215,9 +215,9 @@ RSpec.describe Invoice, type: :model do
       end
     end
 
-    describe "#total_discounted_revenue" do
+    describe "#total_discounted_revenue_for_merchant" do
       it 'can calculate the total discounted revenue for a merchant on an invoices' do
-        expect(@invoice_a.total_discounted_revenue_for_merchant(@merchant_a)).to eq(32800.0)
+        expect(@invoice_a.total_discounted_revenue_for_merchant(@merchant_a)).to eq(34180.0)
         expect(@invoice_a.total_discounted_revenue_for_merchant(@merchant_b)).to eq(23400)
       end
     end

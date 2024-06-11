@@ -79,7 +79,7 @@ class Merchant < ApplicationRecord
       .pluck('invoices.created_at')[0]
   end
 
-  def self.merchants_with_discounts?
-    merchant.where('discounts > 0').exists?
+  def self.merchants_with_discounts
+    joins(:discounts).distinct
   end
 end
