@@ -16,7 +16,7 @@
     </header>
 
     <% flash.each do |type, message| %>
-      <p><%= message %></p>
+      <div id="flash-<%= type %>"><%= message %></div>
     <% end %>
     
   <div class="content">

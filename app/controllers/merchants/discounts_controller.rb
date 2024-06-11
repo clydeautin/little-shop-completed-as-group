@@ -30,11 +30,12 @@ class Merchants::DiscountsController < ApplicationController
     @merchant = Merchant.find(params[:merchant_id])
     @discount = Discount.find(params[:id])
     
-    if @discount.eligible_and_pending
-    flash[:alert] = "Discount can not be deleted, there are pending invoices assocaited"
-      else
-    flash[:notice] = "Discount was successfully deleted"
-    end
+    if @discount.eligible_and_pending? == true
+      flash[:alert] = "Discount can not be deleted, there are pending invoices associated"
+    else
+      @discount.destroy
+      flash[:notice] = "Discount was successfully deleted"
+    end 
     redirect_to merchant_discounts_path(@merchant.id)
   end
 
