@@ -136,4 +136,15 @@ RSpec.describe "the discount index page" do
     expect(current_path).to eq(merchant_discounts_path(@merchant1))
     expect(page).to_not have_content(@july4.name)
   end
+
+  it "when an invoice is pending it prevents a merchant from deleting a bulk discount that applies to any of their items on that invoice" do
+    visit merchant_discounts_path(@merchant1)
+
+    within "#discount-#{@july4.id}" do
+      expect(page).to have_button("Delete Discount")
+      click_button "Delete Discount"
+    end
+
+    expect(page).to have_content("Discount can not be deleted, it is assocaited with a pending order")
+  end
 end

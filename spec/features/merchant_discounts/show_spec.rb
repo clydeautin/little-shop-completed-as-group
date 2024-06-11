@@ -120,7 +120,7 @@ RSpec.describe "the discount show page" do
 
   it "wont save a bulk discount if I leave a field blank" do
     visit "/merchants/#{@merchant1.id}/discounts/#{@july4.id}"
-    
+    save_and_open_page
     expect(page).to have_link("Edit Discount")
     click_link "Edit Discount"
     # save_and_open_page
@@ -134,5 +134,9 @@ RSpec.describe "the discount show page" do
     click_button 'Submit'
     expect(page).to have_content("Failed to update discount")
 
+  end
+
+  it "when an invoice is pending it prevents a merchant from deleting or editing a bulk discount that applies to any of their items on that invoice" do
+        
   end
 end
