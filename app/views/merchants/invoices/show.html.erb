@@ -6,7 +6,7 @@
 <p>Customer first name: <%= @invoice.customer.first_name %></p>
 <p>Customer last name: <%= @invoice.customer.last_name %></p>
 <p>Total Invoice Revenue: $<%= "%.2f" % (@total_revenue.to_f / 100) %></p>
-<p>Total Discounted Revenue: $<%= "%.2f" % (@total_discounted_revenue.to_f / 100) %></p>
+<p>Total Discounted Revenue: $<%= "%.2f" % (@total_discounted_revenue_for_merchant.to_f / 100) %></p>
 
 
 <h2>Items on this invoice</h2>

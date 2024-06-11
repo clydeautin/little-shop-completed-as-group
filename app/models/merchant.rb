@@ -78,4 +78,8 @@ class Merchant < ApplicationRecord
       .limit(1)
       .pluck('invoices.created_at')[0]
   end
+
+  def self.merchants_with_discounts?
+    merchant.where('discounts > 0').exists?
+  end
 end

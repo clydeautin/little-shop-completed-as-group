@@ -256,10 +256,9 @@ RSpec.describe "the merchant dashboard page" do
         end
 
         within "#invoice-item-#{@invoice_item_c.item.id}" do
-          expect(page).to_not have_link("Bulk Discount Applied")
+          expect(page).to_not have_content("Bulk Discount Applied")
         end
       end
     end
   end
-
 end

@@ -181,21 +181,23 @@ RSpec.describe Invoice, type: :model do
     @item_c = FactoryBot.create(:item, merchant: @merchant_a, unit_price: 3100)
     
 
-    @item_e = FactoryBot.create(:item, merchant: @merchant_b, unit_price: 5299)
+    @item_e = FactoryBot.create(:item, merchant: @merchant_b, unit_price: 5200)
     
 
     @invoice_a = FactoryBot.create(:invoice, customer: @customer1, status: 1)
 
-    @invoice_item_a = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_a, quantity: 11, unit_price: @item_a.unit_price) # $242 // $169.4
-    @invoice_item_b = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_b, quantity: 6, unit_price: @item_b.unit_price) # $138 // $110.4
-    @invoice_item_c = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_c, quantity: 2, unit_price: @item_c.unit_price) # $62 Tot= $442 // T = $341.8
-    @invoice_item_d = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_e, quantity: 11, unit_price: @item_e.unit_price)
-
+    @invoice_item_a = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_a, quantity: 11, unit_price: @item_a.unit_price) # $242 // $169.4 // d = 72.6
+    @invoice_item_b = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_b, quantity: 6, unit_price: @item_b.unit_price) # $138 // $110.4 // d = 27.6
+    @invoice_item_c = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_c, quantity: 2, unit_price: @item_c.unit_price) # $62 Tot= $442 //  // T = $341.8
+    @invoice_item_d = FactoryBot.create(:invoice_item, invoice: @invoice_a, item: @item_e, quantity: 5, unit_price: @item_e.unit_price) #$52 Tot= $260 // $234 // d =26  // T = $234 //
+                                                                                                                                        # Total rev no D = $702
+                                                                                                                                        # rev after D = $575.8
+                                                                                                                                        # Total Discount = $126.2
     @loyalty = Discount.create!(name: "Loyalty", percentage: 10, threshold: 3, merchant_id: @merchant_a.id)
     @silver_l = Discount.create!(name: "Silver Loyalty", percentage: 20, threshold: 5, merchant_id: @merchant_a.id)
     @gold_l = Discount.create!(name: "Gold Loyalty", percentage: 30, threshold: 10, merchant_id: @merchant_a.id)
 
-    @summer_disc = Discount.create!(name: "Summer Discount", percentage: 17, threshold: 14, merchant_id: @merchant_b.id)
+    @summer_disc = Discount.create!(name: "Summer Discount", percentage: 10, threshold: 4, merchant_id: @merchant_b.id)
 
   end
 
@@ -215,8 +217,8 @@ RSpec.describe Invoice, type: :model do
 
     describe "#total_discounted_revenue" do
       it 'can calculate the total discounted revenue for a merchant on an invoices' do
-        expect(@invoice_a.total_discounted_revenue(@merchant_a)).to eq(34180.0)
-        expect(@invoice_a.total_discounted_revenue(@merchant_b)).to eq(58289)
+        expect(@invoice_a.total_discounted_revenue_for_merchant(@merchant_a)).to eq(32800.0)
+        expect(@invoice_a.total_discounted_revenue_for_merchant(@merchant_b)).to eq(23400)
       end
     end
 
@@ -237,6 +239,13 @@ RSpec.describe Invoice, type: :model do
         end
 
         expect(Invoice.incomplete).to eq(incompleted)
+      end
+    end
+
+    describe "#total_discount" do
+      it "returns the total discount for all items from every merchant on a customer's invoice" do
+
+        expect(@invoice_a.total_discount).to eq(57580)
       end
     end
   end
