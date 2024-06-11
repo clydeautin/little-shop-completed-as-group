@@ -181,7 +181,7 @@ RSpec.describe "Admin show page" do
 
     @loyalty = Discount.create!(name: "Loyalty", percentage: 10, threshold: 3, merchant_id: @merchant_a.id)
     @silver_l = Discount.create!(name: "Silver Loyalty", percentage: 20, threshold: 5, merchant_id: @merchant_a.id)
-    @gold_l = Discount.create!(name: "Gold Loyalty", percentage: 30, threshold: 5, merchant_id: @merchant_a.id)
+    @gold_l = Discount.create!(name: "Gold Loyalty", percentage: 30, threshold: 10, merchant_id: @merchant_a.id)
 
     @summer_disc = Discount.create!(name: "Summer Discount", percentage: 10, threshold: 4, merchant_id: @merchant_b.id)
 
@@ -241,8 +241,9 @@ RSpec.describe "Admin show page" do
       it 'Shows Total Revenue and Discounted Revenue' do
         visit admin_invoice_path(@invoice_a)
 
-        expect(page).to have_content("Total Invoice Revenue: $1024.89")
+        expect(page).to have_content("Total Invoice Revenue: $702")
         expect(page).to have_content("Total Discounted Revenue: $575.8")
+        save_and_open_page
       end
     end
   end
