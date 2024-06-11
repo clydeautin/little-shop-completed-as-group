@@ -6,7 +6,6 @@ class Discount < ApplicationRecord
 
   belongs_to :merchant
 
-
   def eligible_and_pending?
     eligible_invoice_items.where(status: InvoiceItem.statuses[:pending]).exists?
   end

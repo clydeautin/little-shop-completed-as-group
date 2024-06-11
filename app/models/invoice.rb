@@ -17,9 +17,9 @@ class Invoice < ApplicationRecord
     invoice_items.sum('unit_price * quantity')
   end
 
-  def total_discount
-    a = invoice_items.joins(item: :merchant)
-                    .joins('LEFT JOIN discounts ON discounts.merchant_id = merchants.id AND invoice_items.quantity >= discounts.threshold')
+  def total_discount #total discount for all items from every merchant on a customer's invoice
+    a = invoice_items.joins(item: :discounts)
+                    .where('invoice_items.quantity >= discounts.threshold')
                     .select("invoice_items.id, coalesce(max(invoice_items.unit_price * invoice_items.quantity * (discounts.percentage /100.00)), 0) as total_discount")
                     .group("invoice_items.id")
                     .sum(&:"total_discount")
@@ -31,17 +31,16 @@ class Invoice < ApplicationRecord
   end
 
   def total_discounted_revenue_for_merchant(merchant)
-    # invoice_items.joins(item: :merchant)
-    #               .joins('LEFT JOIN discounts ON discounts.merchant_id = items.merchant_id AND invoice_items.quantity >= discounts.threshold')
-    #               .where(items: { merchant_id: merchant.id })
-    #               .group('invoice_items.id, discounts.percentage')
-    #               .sum('invoice_items.unit_price * invoice_items.quantity * (1 - COALESCE(discounts.percentage, 0) /100.00)')
-    #               .values
-    #               .sum
-    invoice_items.joins(:item).where(items: { merchant_id: merchant.id }).sum do |invoice_item|
-      invoice_item.discounted_price * invoice_item.quantity
-    end
+    a = invoice_items.joins(item: :discounts)
+                      .where(items: { merchant_id: merchant.id })
+                      .where('invoice_items.quantity >= discounts.threshold')
+                      .select("invoice_items.id, coalesce(max(invoice_items.unit_price * invoice_items.quantity * (discounts.percentage /100.00)), 0) as total_discount")
+                      .group("invoice_items.id")
+                      .sum(&:"total_discount")
+    total_revenue_for_merchant(merchant) - a
+    
   end
+
   
   def self.incomplete
     joins(:invoice_items).where.not(invoice_items: {status: 'shipped'}).order(:created_at).distinct

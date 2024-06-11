@@ -244,7 +244,7 @@ RSpec.describe Invoice, type: :model do
 
     describe "#total_discount" do
       it "returns the total discount for all items from every merchant on a customer's invoice" do
-
+        
         expect(@invoice_a.total_discount).to eq(57580)
       end
     end

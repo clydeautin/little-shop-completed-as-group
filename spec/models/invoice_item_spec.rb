@@ -40,7 +40,6 @@ RSpec.describe InvoiceItem do
     end
 
       describe "#best_discount" do
-
         it 'returns the best discount applicable' do
           expect(@invoice_item_a.best_discount).to eq(@gold_l)
           expect(@invoice_item_b.best_discount).to eq(@silver_l)
@@ -52,7 +51,6 @@ RSpec.describe InvoiceItem do
       end
 
       describe '#discounted_price' do
-
         it 'returns the best discounted price if a discount is applicable' do
           expect(@invoice_item_a.discounted_price).to eq(1540.0)
         end
