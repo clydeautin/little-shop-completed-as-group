@@ -222,7 +222,7 @@ RSpec.describe "the discount index page" do
 
   end
 
-  it "prevents me from creating a discount with  anything but a number within 1 and 99 for percentage" do
+  it "prevents me from creating a discount with anything but a number within 1 and 99 for percentage" do
     visit "/merchants/#{@merchant1.id}/discounts"
   
     click_link("Create a new bulk discount")

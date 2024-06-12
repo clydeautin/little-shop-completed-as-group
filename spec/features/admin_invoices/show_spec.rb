@@ -202,7 +202,7 @@ RSpec.describe "Admin show page" do
         end
       end
 
-      it "shows all of my items on the invoice" do
+      it "shows all of the items on the invoice" do
         visit admin_invoice_path(@invoice1)
 
         @invoice1.invoice_items.each do |invoice_item|
