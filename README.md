@@ -1,24 +1,31 @@
 # Little Esty Shop - Final Solo Project
 
-ER Diagram
+This is a collaborative Ruby on Rails project that allows users and admins to manage items, invoices, and discounts in a simplified e-commerce platform. The application demonstrates key Rails features such as MVC architecture, RESTful routing, Active Record, and thorough test coverage.
+
+## Features
+
+### User-Facing Features
+<li>Browse Items: Users can explore available items with details like price and stock.</li>
+<li>Invoice Management: Users can view their invoices, with detailed information on purchased items, quantities, and discounts.</li>
+<li> Discounts: Discounted prices are automatically applied based on item quantity thresholds.</li>
+
+### Admin Features
+<li>Dashboard Overview: Admins can access a dashboard summarizing key business metrics.</li>
+<li>Manage Items: Admins can create, update, and deactivate items in the store.</li>
+<li>Invoice Management: Admins can view and update the status of invoices.</li>
+<li>Discount Management: Admins can define quantity-based discounts for items.</li>
+
+### Technology Stack
+<li>Backend: Ruby on Rails</li>
+<li>Database: PostgreSQL</li>
+<li>Testing: RSpec, Capybara</li>
+<li>Other Tools: Active Record, Heroku (deployment)</li>
+
+## ER Diagram
 <img width="1253" alt="Screenshot 2024-06-06 at 3 35 04 PM" src="https://github.com/clydeautin/little-shop-completed-as-group/assets/15273149/1385d3d8-d896-4b8f-9b75-53f5ab2320eb">
 
-[Bulk Discounts Project Eval](https://backend.turing.edu/module2/projects/bulk_discounts/)
 
 <hr>
-
-## Requirements
-- Must use Rails 7.1.x, Ruby 3.2.2
-- Must use PostgreSQL
-- All code must be tested via feature tests and model tests, respectively
-- Must use GitHub branching, team code reviews via GitHub PR comments, and either GitHub Projects or a project management tool of your group's choice (Trello, Notion, etc.)
-- Must include a thorough README to describe the project
-   - README should include a basic description of the project, a summary of the work completed, and some ideas for a potential contributor to work on/refactor next. Also include the names and GitHub links of all student contributors on your project. 
-- Must deploy completed code to the internet (using Heroku or Render)
-- Continuous Integration / Continuous Deployment is not allowed
-- Use of scaffolding is not allowed
-- Any gems added to the project must be approved by an instructor
-  - Pre-approved gems are `capybara, pry, faker, factory_bot_rails, orderly, simplecov, shoulda-matchers, launchy`
 
 ## Setup
 
@@ -36,3 +43,17 @@ ER Diagram
 1. [User Stories](./doc/user_stories.md)
 1. [Extensions](./doc/extensions.md)
 1. [Evaluation](./doc/evaluation.md)
+
+## Testing
+
+This project follows Test-Driven Development (TDD) principles, achieving 100% test coverage with over 125 tests. The test suite uses RSpec and Capybara to ensure reliability.
+
+Run the test suite:
+`rspec`
+
+## Authors
+
+- Chee Lee [GitHub](https://github.com/cheeleertr)
+- Clyde Autin [GitHub](https://github.com/clydeautin)
+- James McHugh [GitHub](https://github.com/jdmchugh111)
+[Bulk Discounts Project Eval](https://backend.turing.edu/module2/projects/bulk_discounts/)
